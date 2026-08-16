@@ -14,9 +14,21 @@ const CARE_Y = 170;
  * FKTP → RS → sub-spesialis in a payer lane colour; a second line enters
  * the hospital directly from below in --care, skipping FKTP — the
  * emergency route. Position is marked on whichever line applies.
+ *
+ * DESIGN.md §6, "the route drawing forward": when a position is set, the
+ * segment from the start to that position draws along the line in
+ * --dur-draw (500ms) with the --ease timing function. The base lines stay
+ * muted (--rule) so the vivid, animated overlay reads as "you are here,"
+ * not just "this line exists." globals.css collapses the animation to the
+ * final frame under prefers-reduced-motion.
  */
 export function PathwayMap({ position = null }: { position?: PathwayPosition }) {
   const rs = STATIONS[1];
+  const fktp = STATIONS[0];
+
+  const referralProgressX = position === 'gawatDarurat' || position === null
+    ? null
+    : STATIONS.find((s) => s.id === position)?.x ?? null;
 
   return (
     <svg
@@ -25,25 +37,55 @@ export function PathwayMap({ position = null }: { position?: PathwayPosition }) 
       aria-label="Peta alur rujukan: FKTP ke Rumah Sakit ke sub-spesialis, dengan jalur gawat darurat langsung ke Rumah Sakit"
       className="w-full h-auto"
     >
-      {/* referral line */}
+      {/* base referral line — muted, represents the whole system */}
       <line
         x1={STATIONS[0].x}
         y1={LINE_Y}
         x2={STATIONS[2].x}
         y2={LINE_Y}
-        stroke="#2F6B5E"
+        stroke="#DCD8CF"
         strokeWidth={8}
         strokeLinecap="round"
       />
 
-      {/* emergency route: enters the hospital from below, skipping FKTP */}
+      {/* base emergency route — muted dashed, enters the hospital from below, skipping FKTP */}
       <path
         d={`M ${rs.x} ${CARE_Y} L ${rs.x} ${LINE_Y}`}
-        stroke="#C2542B"
+        stroke="#DCD8CF"
         strokeWidth={8}
         strokeLinecap="round"
         strokeDasharray="1 18"
       />
+
+      {referralProgressX !== null && (
+        <line
+          key={`progress-${position}`}
+          x1={fktp.x}
+          y1={LINE_Y}
+          x2={referralProgressX}
+          y2={LINE_Y}
+          stroke="#2F6B5E"
+          strokeWidth={8}
+          strokeLinecap="round"
+          pathLength={1}
+          className="pathway-progress"
+        />
+      )}
+
+      {position === 'gawatDarurat' && (
+        <line
+          x1={rs.x}
+          y1={CARE_Y}
+          x2={rs.x}
+          y2={LINE_Y}
+          stroke="#C2542B"
+          strokeWidth={8}
+          strokeLinecap="round"
+          pathLength={1}
+          className="pathway-progress"
+        />
+      )}
+
       <circle cx={rs.x} cy={CARE_Y} r={7} fill="#C2542B" />
       <text x={rs.x} y={CARE_Y + 24} textAnchor="middle" className="fill-ink" fontSize={13}>
         Jalur gawat darurat

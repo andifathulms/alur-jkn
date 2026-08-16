@@ -8,6 +8,22 @@
   outline-offset: 2px;
 }
 
+/* DESIGN.md §6: the route drawing forward — 500ms, the alur ease. */
+@keyframes pathway-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.pathway-progress {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: pathway-draw 500ms cubic-bezier(0.2, 0, 0, 1) forwards;
+}
+
 /* DESIGN.md §6: prefers-reduced-motion renders both states complete and instant. */
 @media (prefers-reduced-motion: reduce) {
   *,

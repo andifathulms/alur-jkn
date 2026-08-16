@@ -1,5 +1,5 @@
 import { EmergencyBanner } from '@/components/emergency/EmergencyBanner';
-import { PathwayMap } from '@/components/pathway/PathwayMap';
+import { PathwayExplorer } from '@/components/pathway/PathwayExplorer';
 
 /** DESIGN.md §3: the signature view — the referral system as a transit map. */
 export default function AlurPage() {
@@ -12,7 +12,7 @@ export default function AlurPage() {
           Satu jalur berjalan dari FKTP ke rumah sakit, lalu ke sub-spesialis bila diperlukan. Jalur gawat
           darurat masuk langsung ke rumah sakit, melewati FKTP.
         </p>
-        <PathwayMap />
+        <PathwayExplorer />
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render } from '@testing-library/react';
+import { render, within } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import { EmergencyBanner } from '@/components/emergency/EmergencyBanner';
 import { QuestionCard } from '@/components/question/QuestionCard';
@@ -26,10 +26,14 @@ describe('automated a11y — structural checks', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it('PathwayMap svg has an accessible name', async () => {
-    const { container, getByRole } = render(<PathwayMap />);
-    expect(getByRole('img')).toHaveAccessibleName();
-    expect(await axe(container)).toHaveNoViolations();
+  it('PathwayMap svg has an accessible name, with and without a position', async () => {
+    const noPosition = render(<PathwayMap />);
+    expect(within(noPosition.container).getByRole('img')).toHaveAccessibleName();
+    expect(await axe(noPosition.container)).toHaveNoViolations();
+
+    const withPosition = render(<PathwayMap position="gawatDarurat" />);
+    expect(within(withPosition.container).getByRole('img')).toHaveAccessibleName();
+    expect(await axe(withPosition.container)).toHaveNoViolations();
   });
 
   it('PayerHandoffBar (single and coordination) has no axe violations', async () => {
