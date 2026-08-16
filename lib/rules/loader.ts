@@ -2,7 +2,7 @@ import { RulePackSchema, type RulePack } from './schema';
 
 /**
  * Pure: validates one raw pack object against the schema and returns it typed.
- * Callers (scripts/validate-rules.ts, data/rules/index.ts) own reading files.
+ * Callers (scripts/validate-content.ts, data/rules/index.ts) own reading files.
  */
 export function loadRulePack(raw: unknown, sourceLabel: string): RulePack {
   const result = RulePackSchema.safeParse(raw);

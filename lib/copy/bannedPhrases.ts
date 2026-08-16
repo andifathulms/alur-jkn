@@ -49,4 +49,9 @@ export const bannedPhrases: BannedPhrase[] = [
     pattern: /(gejala|diagnosis|derajat\s+nyeri|seberapa\s+parah|sakit\s+apa)/i,
     reason: 'clinical question — invariant 3 allows administrative questions only',
   },
+  {
+    pattern: /\bRp\.?\s?\d[\d.,]*/i,
+    reason:
+      'rupiah amount in patient-facing content — PRD.md v2 §6 and DESIGN.md v2 §13 ban tariff figures; the INA-CBG explainer describes the mechanism only',
+  },
 ];

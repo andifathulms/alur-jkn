@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 /**
  * Every rule cites the instrument that establishes it — CLAUDE.md invariant 6.
- * The build rejects an uncited rule; see scripts/validate-rules.ts.
+ * The build rejects an uncited rule; see scripts/validate-content.ts.
  */
 export const RuleCitationSchema = z.object({
   instrument: z.string().min(1),

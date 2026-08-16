@@ -1,40 +1,18 @@
 import { describe, it, expect } from 'vitest';
-import { scanAll } from '@/lib/copy/check';
-import * as strings from '@/lib/copy/strings';
-import { OUTCOME_LABELS } from '@/lib/copy/outcomeStrings';
-import { scenarios } from '@/data/scenarios';
-import { rulePacks } from '@/data/rules';
-import { scanText } from '@/lib/copy/check';
+import { scanAll, scanText } from '@/lib/copy/check';
+import { collectContentCopy } from '@/lib/copy/collectContentCopy';
 
 /**
  * CLAUDE.md invariant 2: no screen states or implies whether the user's
- * case is covered. This is scripts/copy-check.ts's logic, re-run as a
- * vitest suite so `pnpm test:safety` gates it too, and with a positive
- * control proving the scanner actually catches a verdict when one exists.
+ * case is covered. This re-runs scripts/copy-check.ts's exact scan (via
+ * the shared lib/copy/collectContentCopy.ts collector, so the script and
+ * this suite can never scan two different sets of strings) as a vitest
+ * suite so `pnpm test:safety` gates it too, with a positive control
+ * proving the scanner actually catches a verdict when one exists.
  */
 describe('no-verdict copy scan', () => {
-  it('every scenario field is free of banned verdict/blame phrasing', () => {
-    const entries: Record<string, string> = {};
-    for (const [name, value] of Object.entries(strings)) {
-      if (typeof value === 'string') entries[`strings.${name}`] = value;
-    }
-    for (const scenario of scenarios) {
-      entries[`${scenario.id}.explanation`] = scenario.explanation;
-      entries[`${scenario.id}.nextAction`] = scenario.nextAction;
-      entries[`${scenario.id}.questionToAsk`] = scenario.questionToAsk;
-      if (scenario.outcome.type === 'depends') {
-        entries[`${scenario.id}.outcome.question`] = scenario.outcome.question;
-      }
-    }
-    for (const [name, value] of Object.entries(OUTCOME_LABELS)) {
-      entries[`OUTCOME_LABELS.${name}`] = value;
-    }
-    for (const pack of rulePacks) {
-      for (const rule of pack.rules) {
-        entries[`${pack.packId}.${rule.id}.statement`] = rule.statement;
-      }
-    }
-    expect(scanAll(entries)).toEqual([]);
+  it('every piece of copy and content is free of banned verdict/blame phrasing', () => {
+    expect(scanAll(collectContentCopy())).toEqual([]);
   });
 
   it('positive control: the scanner catches a second-person verdict', () => {

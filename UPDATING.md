@@ -25,7 +25,7 @@ current content as citation-accurate. Do not publish it as-is.
 3. Update `article` and `sourceUrl` to the exact article and the URL you read.
 4. Set `verifiedAt` to the date you read the source, in `YYYY-MM-DD`.
 5. Remove the `status: "draft…"` note once verified.
-6. Run `pnpm rules:validate` — it fails the build on a missing citation field and warns on
+6. Run `pnpm content:validate` — it fails the build on a missing citation field and warns on
    any rule whose `verifiedAt` is older than 365 days.
 7. If the rule's wording changed in a way that affects a scenario's next action or
    question-to-ask, update the scenario in `data/scenarios/` in the same change, and get

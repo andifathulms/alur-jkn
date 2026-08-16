@@ -5,7 +5,7 @@ export const fasilitasTidakBekerjasama: Scenario = {
   id: 'fasilitas-tidak-bekerjasama',
   title: 'Fasilitas tidak bekerja sama dengan BPJS Kesehatan',
   explanation:
-    'Pelayanan di fasilitas kesehatan yang tidak bekerja sama dengan BPJS Kesehatan tidak dijamin JKN, kecuali dalam keadaan gawat darurat. Kalau ini keadaan gawat darurat, langsung dapat pelayanan di fasilitas mana pun sekarang — peserta akan dipindahkan ke fasilitas yang bekerja sama setelah kondisi stabil.',
+    'Penjaminan JKN berjalan melalui fasilitas kesehatan yang bekerja sama dengan BPJS Kesehatan, kecuali dalam keadaan gawat darurat. Kalau ini keadaan gawat darurat, langsung dapat pelayanan di fasilitas mana pun sekarang — peserta akan dipindahkan ke fasilitas yang bekerja sama setelah kondisi stabil, dan penjaminan mengikuti jalur itu.',
   outcome: {
     type: 'depends',
     question: 'Apakah fasilitas ini bekerja sama dengan BPJS Kesehatan, dan kalau tidak, fasilitas mana terdekat yang bekerja sama?',

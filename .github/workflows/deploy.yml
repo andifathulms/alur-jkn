@@ -27,7 +27,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm typecheck
       - run: pnpm lint
-      # pnpm build runs rules:validate and copy:check first — see package.json.
+      # pnpm build runs content:validate and copy:check first — see package.json.
       - run: pnpm build
       - run: pnpm test:safety
       - run: pnpm test:a11y

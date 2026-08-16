@@ -1,47 +1,22 @@
-import { scanAll } from '../lib/copy/check';
-import * as strings from '../lib/copy/strings';
-import { SHARE_TEMPLATE_LABELS } from '../lib/copy/shareText';
-import { OUTCOME_LABELS } from '../lib/copy/outcomeStrings';
-import { scenarios } from '../data/scenarios';
-import { rulePacks } from '../data/rules';
+import { scanAll, scanPasal52Rule } from '../lib/copy/check';
+import { collectContentCopy, collectPasal52Entries } from '../lib/copy/collectContentCopy';
 
-const entries: Record<string, string> = {};
-
-for (const [name, value] of Object.entries(strings)) {
-  if (typeof value === 'string') entries[`lib/copy/strings.ts:${name}`] = value;
-}
-
-for (const [name, value] of Object.entries(SHARE_TEMPLATE_LABELS)) {
-  entries[`lib/copy/shareText.ts:SHARE_TEMPLATE_LABELS.${name}`] = value;
-}
-
-for (const [name, value] of Object.entries(OUTCOME_LABELS)) {
-  entries[`lib/copy/outcomeStrings.ts:OUTCOME_LABELS.${name}`] = value;
-}
-
-for (const scenario of scenarios) {
-  entries[`scenario:${scenario.id}:explanation`] = scenario.explanation;
-  entries[`scenario:${scenario.id}:nextAction`] = scenario.nextAction;
-  entries[`scenario:${scenario.id}:questionToAsk`] = scenario.questionToAsk;
-  if (scenario.outcome.type === 'depends') {
-    entries[`scenario:${scenario.id}:outcome.question`] = scenario.outcome.question;
-  }
-}
-
-for (const pack of rulePacks) {
-  for (const rule of pack.rules) {
-    entries[`rule:${pack.packId}.${rule.id}:statement`] = rule.statement;
-  }
-}
-
+const entries = collectContentCopy();
 const violations = scanAll(entries);
 
-if (violations.length > 0) {
-  console.error(`copy:check — FAILED, ${violations.length} violation(s):\n`);
-  for (const v of violations) {
+const pasal52Entries = collectPasal52Entries();
+const pasal52Violations = scanPasal52Rule(pasal52Entries);
+
+const allViolations = [...violations, ...pasal52Violations];
+
+if (allViolations.length > 0) {
+  console.error(`copy:check — FAILED, ${allViolations.length} violation(s):\n`);
+  for (const v of allViolations) {
     console.error(`  ${v.source}\n    matched "${v.match}" — ${v.reason}\n`);
   }
   process.exit(1);
 }
 
-console.log(`copy:check — OK, scanned ${Object.keys(entries).length} string(s).`);
+console.log(
+  `copy:check — OK, scanned ${Object.keys(entries).length} string(s) (banned-phrase) and ${pasal52Entries.length} string(s) (Pasal 52 rule).`,
+);

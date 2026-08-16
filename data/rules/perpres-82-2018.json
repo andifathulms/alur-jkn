@@ -48,10 +48,10 @@
     },
     {
       "id": "rujukan-permintaan-sendiri",
-      "statement": "Rujukan hanya diberikan berdasarkan indikasi medis dan kebutuhan pelayanan. Rujukan yang diminta sendiri oleh peserta tanpa indikasi medis tidak dijamin sebagai pelayanan berjenjang yang sah.",
+      "statement": "Rujukan hanya diberikan berdasarkan indikasi medis dan kebutuhan pelayanan yang dinilai FKTP. Rujukan yang diminta sendiri oleh peserta tanpa indikasi medis tidak berjalan sebagai pelayanan berjenjang yang sah.",
       "citation": {
         "instrument": "Perpres 82/2018 tentang Jaminan Kesehatan",
-        "article": "Pasal 52",
+        "article": "Pasal 51",
         "sourceUrl": "https://peraturan.bpk.go.id/Details/103187/perpres-no-82-tahun-2018",
         "verifiedAt": "2026-08-16",
         "status": "draft — pending re-verification against consolidated text before publish"
