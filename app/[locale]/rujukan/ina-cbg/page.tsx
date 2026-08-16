@@ -1,8 +1,10 @@
 import { notFound } from 'next/navigation';
 import { InaCbgDiagram } from '@/components/reference/InaCbgDiagram';
 import { ReferenceCitationList } from '@/components/reference/ReferenceCitationList';
+import { ShareCard } from '@/components/share/ShareCard';
 import { getReference } from '@/data/reference';
 import { isStale } from '@/lib/rules/schema';
+import { referenceShareText } from '@/lib/copy/shareText';
 
 /**
  * MIGRATION.md step 3 — the spine. "This page is the correction the whole
@@ -28,6 +30,8 @@ export default function InaCbgPage() {
         <h1 className="text-heading font-medium">{entry.title}</h1>
         <p className="text-body-lg mt-3">{entry.summary}</p>
       </div>
+
+      <ShareCard shareText={referenceShareText(entry)} />
 
       <InaCbgDiagram />
 

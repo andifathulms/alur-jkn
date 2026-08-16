@@ -14,7 +14,7 @@ export default function RujukanLayout({ children }: { children: React.ReactNode 
   return (
     <div>
       <EmergencyBanner />
-      <div className="max-w-5xl mx-auto px-4 py-8 sm:px-6 grid md:grid-cols-[240px_1fr] gap-8">
+      <div className="max-w-5xl mx-auto px-4 py-8 sm:px-6 grid md:grid-cols-[240px_1fr] gap-8 print:block">
         <ReferenceRail items={railItems} />
         <div className="min-w-0">{children}</div>
       </div>

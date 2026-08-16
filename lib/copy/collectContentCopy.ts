@@ -2,6 +2,7 @@ import * as strings from './strings';
 import { SHARE_TEMPLATE_LABELS } from './shareText';
 import { OUTCOME_LABELS, excludedStatementText } from './outcomeStrings';
 import { SEARCH_LABELS, CONTENT_TYPE_LABELS } from './searchStrings';
+import { CONDITION_SECTION_LABELS, CONDITION_INA_CBG_LINK_TEXT } from './conditionStrings';
 import { scenarios } from '@/data/scenarios';
 import { rulePacks } from '@/data/rules';
 import { referenceEntries } from '@/data/reference';
@@ -36,6 +37,11 @@ export function collectContentCopy(): Record<string, string> {
   for (const [name, value] of Object.entries(CONTENT_TYPE_LABELS)) {
     entries[`lib/copy/searchStrings.ts:CONTENT_TYPE_LABELS.${name}`] = value;
   }
+
+  for (const [name, value] of Object.entries(CONDITION_SECTION_LABELS)) {
+    entries[`lib/copy/conditionStrings.ts:CONDITION_SECTION_LABELS.${name}`] = value;
+  }
+  entries['lib/copy/conditionStrings.ts:CONDITION_INA_CBG_LINK_TEXT'] = CONDITION_INA_CBG_LINK_TEXT;
 
   for (const scenario of scenarios) {
     entries[`scenario:${scenario.id}:title`] = scenario.title;
@@ -111,6 +117,19 @@ export function collectPasal52Entries(): Pasal52Entry[] {
   for (const [name, value] of Object.entries(CONTENT_TYPE_LABELS)) {
     entries.push({ source: `lib/copy/searchStrings.ts:CONTENT_TYPE_LABELS.${name}`, text: value, isExcludedStatement: false });
   }
+
+  for (const [name, value] of Object.entries(CONDITION_SECTION_LABELS)) {
+    entries.push({
+      source: `lib/copy/conditionStrings.ts:CONDITION_SECTION_LABELS.${name}`,
+      text: value,
+      isExcludedStatement: false,
+    });
+  }
+  entries.push({
+    source: 'lib/copy/conditionStrings.ts:CONDITION_INA_CBG_LINK_TEXT',
+    text: CONDITION_INA_CBG_LINK_TEXT,
+    isExcludedStatement: false,
+  });
 
   for (const scenario of scenarios) {
     entries.push(

@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import type { Condition } from '@/lib/content/condition';
 import { RuleCitationList } from '@/components/rules/RuleCitationList';
+import { ShareCard } from '@/components/share/ShareCard';
 import { CONDITION_SECTION_LABELS, CONDITION_INA_CBG_LINK_TEXT } from '@/lib/copy/conditionStrings';
 import { referenceHref } from '@/lib/content/reference';
+import { conditionShareText } from '@/lib/copy/shareText';
 import type { Rule } from '@/lib/rules/schema';
 
 interface CitedRule {
@@ -33,6 +35,8 @@ export function ConditionTemplate({
         <h1 className="text-heading font-medium">{condition.title}</h1>
         <p className="text-body-lg mt-3">{condition.summary}</p>
       </div>
+
+      <ShareCard shareText={conditionShareText(condition, citedRules.map((c) => c.rule))} />
 
       <section>
         <h2 className="text-caption font-bold uppercase tracking-wide text-ink/70">
