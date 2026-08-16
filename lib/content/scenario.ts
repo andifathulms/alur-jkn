@@ -1,13 +1,6 @@
 import { z } from 'zod';
 import { OutcomeSchema } from './outcome';
-
-export const RuleRefSchema = z
-  .object({
-    packId: z.string().min(1),
-    ruleId: z.string().min(1),
-  })
-  .strict();
-export type RuleRef = z.infer<typeof RuleRefSchema>;
+import { RuleRefSchema } from './ruleRef';
 
 /**
  * v2 content model, type 1 of 3 (PRD.md §5.1) — an administrative

@@ -86,11 +86,33 @@ try {
   console.error(String(err instanceof Error ? err.message : err));
 }
 
-// --- Conditions: five sections + INA-CBG link ---
-// TODO(step 5): data/conditions/ and lib/content/condition.ts don't exist
-// yet (MIGRATION.md step 5). Once they do, validate here that every
-// condition carries all five §5.3 sections and a link to the INA-CBG
-// reference — the same pattern as the scenario check above.
+// --- Conditions: five sections + rule citations ---
+// ConditionSchema (lib/content/condition.ts) requires all five §5.3
+// sections as named, non-empty fields — data/conditions/index.ts already
+// throws on a missing one at import time, so a successful import proves
+// completeness. The INA-CBG link isn't a data field at all: every
+// condition page's template (components/condition/ConditionTemplate.tsx)
+// renders it unconditionally, and tests/safety/condition-content.test.tsx
+// asserts that render-level guarantee for every condition.
+
+try {
+  const { conditions } = await import('../data/conditions');
+  const { rulePacks: allPacks } = await import('../data/rules');
+  for (const condition of conditions) {
+    for (const ref of condition.ruleRefs) {
+      const pack = allPacks.find((p) => p.packId === ref.packId);
+      const resolved = pack?.rules.some((r) => r.id === ref.ruleId) ?? false;
+      if (!resolved) {
+        failed = true;
+        console.error(`content:validate — ${condition.slug}: ruleRef ${ref.packId}.${ref.ruleId} does not resolve`);
+      }
+    }
+  }
+  console.log(`content:validate — OK: ${conditions.length} conditions, five sections and rule citations complete.`);
+} catch (err) {
+  failed = true;
+  console.error(String(err instanceof Error ? err.message : err));
+}
 
 if (failed) {
   console.error('content:validate — FAILED.');

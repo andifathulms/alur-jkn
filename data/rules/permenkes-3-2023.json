@@ -1,0 +1,17 @@
+{
+  "packId": "permenkes-3-2023",
+  "title": "Permenkes 3/2023 — Standar Tarif Pelayanan Kesehatan (INA-CBG)",
+  "rules": [
+    {
+      "id": "paket-ina-cbg",
+      "statement": "JKN membayar rumah sakit menggunakan sistem INA-CBG: satu tarif paket per kelompok kasus, bukan per tindakan atau metode. Tarif paket sama meskipun metode yang dipakai di dalamnya berbeda; nilainya bervariasi menurut kelas rumah sakit dan regional tarif.",
+      "citation": {
+        "instrument": "Permenkes 3/2023 tentang Standar Tarif Pelayanan Kesehatan dalam Penyelenggaraan Program Jaminan Kesehatan",
+        "article": "Pasal 3",
+        "sourceUrl": "https://peraturan.bpk.go.id/Search?keywords=Permenkes+3+2023+Standar+Tarif+Pelayanan+Kesehatan",
+        "verifiedAt": "2026-08-16",
+        "status": "draft — pending re-verification against consolidated text before publish"
+      }
+    }
+  ]
+}

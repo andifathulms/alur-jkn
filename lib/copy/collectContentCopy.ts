@@ -4,6 +4,7 @@ import { OUTCOME_LABELS, excludedStatementText } from './outcomeStrings';
 import { scenarios } from '@/data/scenarios';
 import { rulePacks } from '@/data/rules';
 import { referenceEntries } from '@/data/reference';
+import { conditions } from '@/data/conditions';
 import type { Pasal52Entry } from './check';
 
 /**
@@ -56,6 +57,16 @@ export function collectContentCopy(): Record<string, string> {
         entries[`reference:${reference.slug}:entry:${entry.term}:detail`] = entry.detail;
       }
     }
+  }
+
+  for (const condition of conditions) {
+    entries[`condition:${condition.slug}:title`] = condition.title;
+    entries[`condition:${condition.slug}:summary`] = condition.summary;
+    entries[`condition:${condition.slug}:route`] = condition.route;
+    entries[`condition:${condition.slug}:methodDeterminant`] = condition.methodDeterminant;
+    entries[`condition:${condition.slug}:whyOneOption`] = condition.whyOneOption;
+    entries[`condition:${condition.slug}:costsThatRemain`] = condition.costsThatRemain;
+    entries[`condition:${condition.slug}:questionToAsk`] = condition.questionToAsk;
   }
 
   return entries;
@@ -140,6 +151,30 @@ export function collectPasal52Entries(): Pasal52Entry[] {
         });
       }
     }
+  }
+
+  // Conditions never route to State B — PRD.md §5.3: "Never a verdict. If
+  // something is not in Pasal 52, do not write that it is not covered —
+  // write what actually determines it." Every field is a plain violation
+  // check, none is ever an allowed carrier.
+  for (const condition of conditions) {
+    entries.push(
+      { source: `condition:${condition.slug}:title`, text: condition.title, isExcludedStatement: false },
+      { source: `condition:${condition.slug}:summary`, text: condition.summary, isExcludedStatement: false },
+      { source: `condition:${condition.slug}:route`, text: condition.route, isExcludedStatement: false },
+      {
+        source: `condition:${condition.slug}:methodDeterminant`,
+        text: condition.methodDeterminant,
+        isExcludedStatement: false,
+      },
+      { source: `condition:${condition.slug}:whyOneOption`, text: condition.whyOneOption, isExcludedStatement: false },
+      {
+        source: `condition:${condition.slug}:costsThatRemain`,
+        text: condition.costsThatRemain,
+        isExcludedStatement: false,
+      },
+      { source: `condition:${condition.slug}:questionToAsk`, text: condition.questionToAsk, isExcludedStatement: false },
+    );
   }
 
   return entries;
