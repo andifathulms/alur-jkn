@@ -1,0 +1,94 @@
+{
+  "packId": "perpres-82-2018",
+  "title": "Perpres 82/2018 — Jaminan Kesehatan",
+  "rules": [
+    {
+      "id": "rujukan-berjenjang",
+      "statement": "Pelayanan kesehatan bagi peserta JKN dilaksanakan secara berjenjang, dimulai dari fasilitas kesehatan tingkat pertama (FKTP), kecuali dalam keadaan gawat darurat, kekhususan permasalahan kesehatan pasien, pertimbangan geografis, atau pertimbangan ketersediaan fasilitas.",
+      "citation": {
+        "instrument": "Perpres 82/2018 tentang Jaminan Kesehatan",
+        "article": "Pasal 51-53",
+        "sourceUrl": "https://peraturan.bpk.go.id/Details/103187/perpres-no-82-tahun-2018",
+        "verifiedAt": "2026-08-16",
+        "status": "draft — pending re-verification against consolidated text before publish"
+      }
+    },
+    {
+      "id": "gawat-darurat-akses-langsung",
+      "statement": "Peserta yang memerlukan pelayanan gawat darurat dapat langsung memperoleh pelayanan kesehatan di fasilitas kesehatan yang tidak bekerja sama dengan BPJS Kesehatan. Pelayanan di luar fasilitas kesehatan yang bekerja sama dikecualikan dari penjaminan, kecuali dalam keadaan gawat darurat, dan peserta dirujuk ke fasilitas kesehatan yang bekerja sama setelah keadaannya stabil.",
+      "citation": {
+        "instrument": "Perpres 82/2018 tentang Jaminan Kesehatan",
+        "article": "Pasal 63",
+        "sourceUrl": "https://peraturan.bpk.go.id/Details/103187/perpres-no-82-tahun-2018",
+        "verifiedAt": "2026-08-16",
+        "status": "draft — pending re-verification against consolidated text before publish"
+      }
+    },
+    {
+      "id": "kecelakaan-lalu-lintas-koordinasi",
+      "statement": "Untuk kasus kecelakaan lalu lintas, penjaminan oleh program jaminan kecelakaan lalu lintas wajib (Jasa Raharja) berlaku lebih dahulu sampai batas nilai tertentu sesuai hak kelas rawat peserta. JKN melanjutkan penjaminan atas selisih biaya yang melebihi batas tersebut.",
+      "citation": {
+        "instrument": "Perpres 82/2018 tentang Jaminan Kesehatan",
+        "article": "Pasal 27",
+        "sourceUrl": "https://peraturan.bpk.go.id/Details/103187/perpres-no-82-tahun-2018",
+        "verifiedAt": "2026-08-16",
+        "status": "draft — pending re-verification against consolidated text before publish"
+      }
+    },
+    {
+      "id": "kecelakaan-kerja-koordinasi",
+      "statement": "Untuk kasus kecelakaan kerja atau penyakit akibat kerja, penjaminan oleh program jaminan kecelakaan kerja (BPJS Ketenagakerjaan atau penyelenggara lain) berlaku lebih dahulu. JKN melanjutkan penjaminan apabila hak jaminan kecelakaan kerja telah habis atau tidak mencakup layanan yang diperlukan.",
+      "citation": {
+        "instrument": "Perpres 82/2018 tentang Jaminan Kesehatan",
+        "article": "Pasal 27",
+        "sourceUrl": "https://peraturan.bpk.go.id/Details/103187/perpres-no-82-tahun-2018",
+        "verifiedAt": "2026-08-16",
+        "status": "draft — pending re-verification against consolidated text before publish"
+      }
+    },
+    {
+      "id": "rujukan-permintaan-sendiri",
+      "statement": "Rujukan hanya diberikan berdasarkan indikasi medis dan kebutuhan pelayanan. Rujukan yang diminta sendiri oleh peserta tanpa indikasi medis tidak dijamin sebagai pelayanan berjenjang yang sah.",
+      "citation": {
+        "instrument": "Perpres 82/2018 tentang Jaminan Kesehatan",
+        "article": "Pasal 52",
+        "sourceUrl": "https://peraturan.bpk.go.id/Details/103187/perpres-no-82-tahun-2018",
+        "verifiedAt": "2026-08-16",
+        "status": "draft — pending re-verification against consolidated text before publish"
+      }
+    },
+    {
+      "id": "kartu-tidak-aktif",
+      "statement": "Status kepesertaan yang menunggak iuran dapat menjadi tidak aktif. Pelayanan kesehatan bagi peserta dengan status tidak aktif diproses ulang setelah tunggakan dilunasi, dengan ketentuan denda pelayanan untuk kondisi tertentu.",
+      "citation": {
+        "instrument": "Perpres 82/2018 tentang Jaminan Kesehatan",
+        "article": "Pasal 42",
+        "sourceUrl": "https://peraturan.bpk.go.id/Details/103187/perpres-no-82-tahun-2018",
+        "verifiedAt": "2026-08-16",
+        "status": "draft — pending re-verification against consolidated text before publish"
+      }
+    },
+    {
+      "id": "naik-kelas-rawat",
+      "statement": "Peserta dapat memilih naik kelas rawat inap di atas haknya, dengan membayar selisih biaya antara tarif kelas yang dipilih dan tarif kelas hak peserta secara mandiri atau melalui asuransi tambahan.",
+      "citation": {
+        "instrument": "Perpres 82/2018 tentang Jaminan Kesehatan",
+        "article": "Pasal 51 ayat (3)",
+        "sourceUrl": "https://peraturan.bpk.go.id/Details/103187/perpres-no-82-tahun-2018",
+        "verifiedAt": "2026-08-16",
+        "status": "draft — pending re-verification against consolidated text before publish"
+      }
+    },
+    {
+      "id": "layanan-dikecualikan",
+      "statement": "Sejumlah pelayanan dikecualikan dari penjaminan JKN, antara lain pelayanan untuk tujuan estetika, penanganan infertilitas, pengobatan alternatif dan komplementer yang belum dinyatakan efektif berdasarkan penilaian teknologi kesehatan, serta pelayanan yang bersifat eksperimental.",
+      "citation": {
+        "instrument": "Perpres 82/2018 tentang Jaminan Kesehatan",
+        "article": "Pasal 52",
+        "sourceUrl": "https://peraturan.bpk.go.id/Details/103187/perpres-no-82-tahun-2018",
+        "verifiedAt": "2026-08-16",
+        "status": "draft — pending re-verification against consolidated text before publish"
+      }
+    }
+  ]
+}

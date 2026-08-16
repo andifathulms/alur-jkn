@@ -1,0 +1,17 @@
+{
+  "packId": "permenkes-47-2018",
+  "title": "Permenkes 47/2018 — Pelayanan Kegawatdaruratan",
+  "rules": [
+    {
+      "id": "kriteria-gawat-darurat",
+      "statement": "Kriteria gawat darurat ditetapkan berdasarkan penilaian tenaga medis di fasilitas kesehatan, bukan oleh persepsi pasien atau keluarga. Kriteria ini mencakup ancaman terhadap nyawa, kegagalan organ, atau risiko kecacatan apabila tidak mendapat pertolongan segera. Penilaian ini adalah wewenang petugas medis, bukan sesuatu yang dapat ditentukan sendiri sebelum tiba di fasilitas kesehatan.",
+      "citation": {
+        "instrument": "Permenkes 47/2018 tentang Pelayanan Kegawatdaruratan",
+        "article": "Pasal 3-4",
+        "sourceUrl": "https://peraturan.bpk.go.id/Details/111873/permenkes-no-47-tahun-2018",
+        "verifiedAt": "2026-08-16",
+        "status": "draft — pending re-verification against consolidated text before publish"
+      }
+    }
+  ]
+}

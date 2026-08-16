@@ -1,0 +1,17 @@
+{
+  "packId": "permenkes-formularium-nasional",
+  "title": "Formularium Nasional — Permenkes tentang Formularium Nasional",
+  "rules": [
+    {
+      "id": "obat-di-luar-fornas",
+      "statement": "Penjaminan obat bagi peserta JKN mengacu pada daftar Formularium Nasional. Obat di luar daftar tersebut dapat digunakan atas indikasi medis tertentu melalui mekanisme dan persetujuan komite medik fasilitas kesehatan, dan penjaminannya mengikuti ketentuan yang berlaku pada fasilitas tersebut.",
+      "citation": {
+        "instrument": "Keputusan Menteri Kesehatan tentang Formularium Nasional",
+        "article": "Ketentuan Umum",
+        "sourceUrl": "https://farmalkes.kemkes.go.id/",
+        "verifiedAt": "2026-08-16",
+        "status": "draft — pending re-verification against current edition before publish"
+      }
+    }
+  ]
+}
