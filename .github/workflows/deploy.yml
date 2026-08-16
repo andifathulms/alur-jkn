@@ -25,6 +25,12 @@ jobs:
           node-version: 20
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # offline:check (below) drives a real Chromium instance against the
+      # production build — DESIGN.md §18's service worker, build order
+      # step 9. --with-deps installs the OS libraries Chromium needs on
+      # the runner image; --only-shell would be smaller but next-pwa's
+      # smoke test needs full page rendering, not just the headless shell.
+      - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm typecheck
       - run: pnpm lint
       # pnpm build runs content:validate and copy:check first — see package.json.
@@ -32,17 +38,13 @@ jobs:
       - run: pnpm test:safety
       - run: pnpm test:a11y
       - run: pnpm bundle:check
-      # DESIGN.md §17's new checks. contrast:check (step 5), map:check
-      # (step 4), strings:check, and tokens:check (step 7) are real and
-      # now pass, so they block deploy like the checks above. offline:check
-      # still fails — no service worker yet, build order step 9 — so it
-      # stays continue-on-error until that lands.
+      # DESIGN.md §17's new checks — all five are real and now pass, so
+      # they block deploy like the checks above.
       - run: pnpm contrast:check
       - run: pnpm map:check
       - run: pnpm strings:check
       - run: pnpm tokens:check
       - run: pnpm offline:check
-        continue-on-error: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out

@@ -23,7 +23,9 @@ Read `PRD.md` before starting any task, and **`DESIGN.md` before writing any UI 
 - Vitest, plus axe for automated a11y
 - pnpm
 - **No component library. No analytics library. No error reporting.** No third-party runtime script of
-  any kind; one build-time exception, the service-worker generator, per `DESIGN.md` §18.
+  any kind; one build-time exception, the service-worker generator, per `DESIGN.md` §18 —
+  `@ducanh2912/next-pwa`, wired in `next.config.js`, disabled in `pnpm dev`. Playwright is a devDependency
+  only, driving `offline:check` against the built `out/`; it ships nothing to the deployed site.
 - Fonts via `next/font`, self-hosted and subset.
 
 ## Commands
@@ -44,27 +46,28 @@ pnpm contrast:check         # DESIGN.md §17 — computed AA/AAA ratio per claim
 pnpm strings:check          # DESIGN.md §17 — no user-visible string defined twice
 pnpm tokens:check           # DESIGN.md §17 — no arbitrary target value, no raw hex, where a token exists
 pnpm map:check              # DESIGN.md §17 — every coverage route carries a station fragment
-pnpm offline:check          # DESIGN.md §17 — service worker registers, second load survives offline
+pnpm offline:check          # DESIGN.md §17 — Playwright: service worker registers and activates,
+                             # second load with the network blocked renders the same content
 pnpm typecheck
 pnpm lint
 ```
 
-`contrast:check`, `strings:check`, `map:check`, and `tokens:check` are real, un-softened checks and now
-pass: colour tokens were corrected to their claimed ratio (`--self`/`--care` darkened, `DESIGN.md` §2;
-`text-ink/60` retired in favour of `text-ink/70`, the lightest opacity that clears AA), every coverage
-route carries a station fragment (`DESIGN.md`'s build order step 4), `app/layout.tsx`'s metadata title
-now imports `APP_NAME` instead of re-typing it, `components/primitives/Button.tsx` (step 7) absorbed
-every duplicated bordered-button className string and hand-written arbitrary target value into
-`min-h-target`/`min-h-target-family`, and `InaCbgDiagram.tsx`'s raw hex became `var(--color-x)` when it
-was rewritten as a data-bound diagram (step 8). `offline:check` still fails for the reason it always has
-(no service worker yet) — it becomes a blocking gate once step 9 lands.
+All five `DESIGN.md` §17 checks (`contrast:check`, `strings:check`, `map:check`, `tokens:check`,
+`offline:check`) are real, un-softened checks and now pass: colour tokens were corrected to their claimed
+ratio (`--self`/`--care` darkened, `DESIGN.md` §2; `text-ink/60` retired in favour of `text-ink/70`, the
+lightest opacity that clears AA), every coverage route carries a station fragment (build order step 4),
+`app/layout.tsx`'s metadata title now imports `APP_NAME` instead of re-typing it,
+`components/primitives/Button.tsx` (step 7) absorbed every duplicated bordered-button className string
+and hand-written arbitrary target value into `min-h-target`/`min-h-target-family`, `InaCbgDiagram.tsx`'s
+raw hex became `var(--color-x)` when it was rewritten as a data-bound diagram (step 8), and the service
+worker now exists (`next.config.js`'s `withPWA` wrapper, step 9) with a real Playwright smoke test
+proving it registers, activates, and survives a second load with the network blocked.
 
 The four original gating checks (`content:validate`, `copy:check`, `bundle:check`, plus `typecheck` and
 `lint`) run in `build` and CI and are blocking. **None may be skipped, weakened, or flagged around, and
-they outrank every check added since.** The five `DESIGN.md` §17 checks above run in CI too;
-`contrast:check`, `strings:check`, `map:check`, and `tokens:check` are blocking now that they pass;
-`offline:check` remains informational until its corresponding fix lands (see above) — informational is a
-pipeline-wiring decision, not a licence to soften what the check itself asserts.
+they outrank every check added since.** All five `DESIGN.md` §17 checks are blocking in CI too now that
+each one passes — informational was always a pipeline-wiring decision, not a licence to soften what the
+check itself asserts.
 
 ## Primitives
 
