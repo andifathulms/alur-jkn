@@ -2,6 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Mirrors tailwind.config.ts's colour tokens as CSS custom properties, for
+ * SVG presentation attributes (stroke/fill), which cannot take Tailwind
+ * classes. `var(--color-X)` here instead of a raw hex literal is what
+ * scripts/tokens-check.ts checks for — new SVG work should use these, not
+ * add to the raw-hex count that script already reports against the
+ * pre-existing pathway/INA-CBG diagrams. Keep in sync with
+ * tailwind.config.ts by hand; there is no build step that derives one from
+ * the other.
+ */
+:root {
+  --color-paper: #f7f5f0;
+  --color-ink: #1f2421;
+  --color-rule: #dcd8cf;
+  --color-payer-1: #2f6b5e;
+  --color-payer-2: #4a5c8a;
+  --color-payer-3: #8a6a3b;
+  --color-self: #6e7a72;
+  --color-care: #c2542b;
+}
+
 /* DESIGN.md §7: focus visible on every interactive element, 3px. */
 :focus-visible {
   outline: 3px solid var(--tw-color-ink, #1f2421);
