@@ -46,7 +46,12 @@ export const bannedPhrases: BannedPhrase[] = [
     reason: 'discourages seeking care — violates the highest-priority rule',
   },
   {
-    pattern: /(gejala|diagnosis|derajat\s+nyeri|seberapa\s+parah|sakit\s+apa)/i,
+    // Narrowed to solicitations directed at the reader, not the bare nouns —
+    // v2's reference layer legitimately discusses diagnosis/procedure *codes*
+    // as an administrative billing concept (INA-CBG groups by them), which
+    // isn't the app asking the patient a clinical question. What's still
+    // banned: asking the reader for their symptoms, diagnosis, or pain level.
+    pattern: /apa\s+gejala|gejala\s+(apa|yang\s+(anda|dirasakan))|diagnosis\s+anda|apa\s+diagnosis(nya)?|sebutkan\s+diagnosis|derajat\s+nyeri|seberapa\s+parah|sakit\s+apa/i,
     reason: 'clinical question — invariant 3 allows administrative questions only',
   },
   {

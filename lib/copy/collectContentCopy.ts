@@ -3,6 +3,7 @@ import { SHARE_TEMPLATE_LABELS } from './shareText';
 import { OUTCOME_LABELS, excludedStatementText } from './outcomeStrings';
 import { scenarios } from '@/data/scenarios';
 import { rulePacks } from '@/data/rules';
+import { referenceEntries } from '@/data/reference';
 import type { Pasal52Entry } from './check';
 
 /**
@@ -39,6 +40,14 @@ export function collectContentCopy(): Record<string, string> {
   for (const pack of rulePacks) {
     for (const rule of pack.rules) {
       entries[`rule:${pack.packId}.${rule.id}:statement`] = rule.statement;
+    }
+  }
+
+  for (const reference of referenceEntries) {
+    entries[`reference:${reference.slug}:title`] = reference.title;
+    entries[`reference:${reference.slug}:summary`] = reference.summary;
+    for (const section of reference.sections) {
+      entries[`reference:${reference.slug}:section:${section.heading}`] = section.body;
     }
   }
 

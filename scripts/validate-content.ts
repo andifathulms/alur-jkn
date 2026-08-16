@@ -63,6 +63,28 @@ try {
   console.error(String(err instanceof Error ? err.message : err));
 }
 
+// --- Reference entries: citations, staleness ---
+// data/reference/index.ts already runs ReferenceSchema.parse() at import
+// time, so a successful import already proves the zod-level invariant
+// (every reference entry has at least one citation, each with instrument,
+// article, sourceUrl, verifiedAt). This adds staleness warnings, the same
+// treatment as rule packs.
+
+try {
+  const { referenceEntries } = await import('../data/reference');
+  for (const entry of referenceEntries) {
+    for (const citation of entry.citations) {
+      if (isStale(citation.verifiedAt, now)) {
+        console.warn(`content:validate — STALE: reference.${entry.slug} last verified ${citation.verifiedAt}`);
+      }
+    }
+  }
+  console.log(`content:validate — OK: ${referenceEntries.length} reference entries, citations complete.`);
+} catch (err) {
+  failed = true;
+  console.error(String(err instanceof Error ? err.message : err));
+}
+
 // --- Conditions: five sections + INA-CBG link ---
 // TODO(step 5): data/conditions/ and lib/content/condition.ts don't exist
 // yet (MIGRATION.md step 5). Once they do, validate here that every
