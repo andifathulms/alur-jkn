@@ -8,7 +8,9 @@ describe('type floor', () => {
   const fontSize = resolved.theme.fontSize as Record<string, [string, unknown]>;
 
   function px(name: string): number {
-    return parseInt(fontSize[name][0], 10);
+    const entry = fontSize[name];
+    if (!entry) throw new Error(`No fontSize token named "${name}" in tailwind.config.ts`);
+    return parseInt(entry[0], 10);
   }
 
   it('caption is exactly the 16px floor', () => {
