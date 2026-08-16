@@ -9,7 +9,11 @@ import {
   type AdministrativeAnswers,
 } from '@/lib/scenario/resolve';
 import { getScenario } from '@/data/scenarios';
+import { rulePacks } from '@/data/rules';
+import { findRule } from '@/lib/rules/loader';
+import { scenarioShareText } from '@/lib/copy/shareText';
 import { QuestionCard } from '@/components/question/QuestionCard';
+import { ShareCard } from '@/components/share/ShareCard';
 
 const PROMPTS: Record<keyof AdministrativeAnswers, string> = {
   kecelakaanLaluLintas: 'Apakah ini berkaitan dengan kecelakaan lalu lintas?',
@@ -76,6 +80,7 @@ export function FamilyWizard() {
 
   const scenarioId = resolveScenarioId(answers);
   const scenario = scenarioId ? getScenario(scenarioId) : undefined;
+  const citedRules = scenario?.ruleRefs.map((ref) => findRule(rulePacks, ref.packId, ref.ruleId)) ?? [];
 
   return (
     <div className="max-w-xl mx-auto px-4 py-10 sm:px-6 space-y-6">
@@ -84,6 +89,7 @@ export function FamilyWizard() {
           <h1 className="text-heading font-medium">{scenario.title}</h1>
           <p className="text-body-lg">{scenario.explanation}</p>
           <QuestionCard nextAction={scenario.nextAction} questionToAsk={scenario.questionToAsk} />
+          <ShareCard shareText={scenarioShareText(scenario, citedRules)} />
         </>
       ) : (
         <p className="text-body-lg">

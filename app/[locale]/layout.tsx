@@ -17,7 +17,7 @@ const NAV = [
 export default function LocaleLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="border-b border-rule px-4 py-4 sm:px-6 flex items-center justify-between flex-wrap gap-3">
+      <header className="no-print border-b border-rule px-4 py-4 sm:px-6 flex items-center justify-between flex-wrap gap-3">
         <Link href="/id" className="text-key font-medium">
           {APP_NAME}
         </Link>

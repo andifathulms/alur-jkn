@@ -1,12 +1,15 @@
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import { EmergencyBanner } from '@/components/emergency/EmergencyBanner';
 import { QuestionCard } from '@/components/question/QuestionCard';
 import { PayerHandoffBar } from '@/components/handoff/PayerHandoffBar';
 import { RuleCitationList } from '@/components/rules/RuleCitationList';
+import { ShareCard } from '@/components/share/ShareCard';
 import { scenarios } from '@/data/scenarios';
 import { rulePacks } from '@/data/rules';
 import { findRule } from '@/lib/rules/loader';
 import { isStale } from '@/lib/rules/schema';
+import { scenarioShareText } from '@/lib/copy/shareText';
 
 export function generateStaticParams() {
   return scenarios.map((s) => ({ scenario: s.id }));
@@ -22,20 +25,38 @@ export default function ScenarioDetailPage({ params }: { params: { scenario: str
     return { rule, stale: isStale(rule.citation.verifiedAt, now) };
   });
 
+  const shareText = scenarioShareText(
+    scenario,
+    citedRules.map((c) => c.rule),
+  );
+
   return (
     <div>
       <EmergencyBanner />
-      <div className="max-w-3xl mx-auto px-4 py-8 sm:px-6 space-y-8">
-        <h1 className="text-heading font-medium">{scenario.title}</h1>
-        <p className="text-body-lg">{scenario.explanation}</p>
+      <div className="max-w-5xl mx-auto px-4 py-8 sm:px-6">
+        <Link href="/id/petugas" className="no-print text-caption underline underline-offset-4">
+          ← Daftar skenario
+        </Link>
 
-        <PayerHandoffBar routing={scenario.routing} />
+        {/* DESIGN.md §5: landscape-friendly, readable across a desk. Two columns at md+
+            keep the answer and the question visible together without scrolling. */}
+        <div className="grid md:grid-cols-[3fr_2fr] gap-8 mt-4 print:block print:space-y-6">
+          <div className="space-y-6">
+            <h1 className="text-heading font-medium">{scenario.title}</h1>
+            <p className="text-body-lg">{scenario.explanation}</p>
+            <PayerHandoffBar routing={scenario.routing} />
+            <QuestionCard nextAction={scenario.nextAction} questionToAsk={scenario.questionToAsk} />
+          </div>
 
-        <QuestionCard nextAction={scenario.nextAction} questionToAsk={scenario.questionToAsk} />
-
-        <div>
-          <h2 className="text-caption font-bold uppercase tracking-wide text-ink/70 mb-2">Dasar aturan</h2>
-          <RuleCitationList citedRules={citedRules} />
+          <div className="space-y-6">
+            <ShareCard shareText={shareText} />
+            <div>
+              <h2 className="text-caption font-bold uppercase tracking-wide text-ink/70 mb-2">
+                Dasar aturan
+              </h2>
+              <RuleCitationList citedRules={citedRules} />
+            </div>
+          </div>
         </div>
       </div>
     </div>

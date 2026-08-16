@@ -1,5 +1,6 @@
 import { scanAll } from '../lib/copy/check';
 import * as strings from '../lib/copy/strings';
+import { SHARE_TEMPLATE_LABELS } from '../lib/copy/shareText';
 import { scenarios } from '../data/scenarios';
 import { rulePacks } from '../data/rules';
 
@@ -7,6 +8,10 @@ const entries: Record<string, string> = {};
 
 for (const [name, value] of Object.entries(strings)) {
   if (typeof value === 'string') entries[`lib/copy/strings.ts:${name}`] = value;
+}
+
+for (const [name, value] of Object.entries(SHARE_TEMPLATE_LABELS)) {
+  entries[`lib/copy/shareText.ts:SHARE_TEMPLATE_LABELS.${name}`] = value;
 }
 
 for (const scenario of scenarios) {
