@@ -6,6 +6,7 @@ import { ReferenceCitationList } from '@/components/reference/ReferenceCitationL
 import { ReferenceRail } from '@/components/reference/ReferenceRail';
 import { getReference, referenceEntries } from '@/data/reference';
 import { isStale } from '@/lib/rules/schema';
+import { slugify } from '@/lib/content/slugify';
 
 const SAMPLE_CITATION = {
   instrument: 'Perpres 82/2018 tentang Jaminan Kesehatan',
@@ -32,6 +33,20 @@ describe('reference layer components', () => {
       />,
     );
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('renders each entry with a deep-linkable anchor id — MIGRATION.md step 6', () => {
+    const { container } = render(
+      <ReferenceEntryList
+        entries={[
+          {
+            entry: { term: 'Kacamata', definition: 'Definisi.', detail: 'Rincian.', citation: SAMPLE_CITATION },
+            stale: false,
+          },
+        ]}
+      />,
+    );
+    expect(container.querySelector(`#${slugify('Kacamata')}`)).not.toBeNull();
   });
 
   it('ReferenceCitationList has no axe violations', async () => {

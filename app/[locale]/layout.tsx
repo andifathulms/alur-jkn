@@ -8,6 +8,7 @@ export function generateStaticParams() {
 }
 
 const NAV = [
+  { href: '/id/cari', label: 'Cari' },
   { href: '/id/alur', label: 'Alur' },
   { href: '/id/petugas', label: 'Mode petugas' },
   { href: '/id/keluarga', label: 'Mode keluarga' },

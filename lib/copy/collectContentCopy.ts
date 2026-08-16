@@ -1,6 +1,7 @@
 import * as strings from './strings';
 import { SHARE_TEMPLATE_LABELS } from './shareText';
 import { OUTCOME_LABELS, excludedStatementText } from './outcomeStrings';
+import { SEARCH_LABELS, CONTENT_TYPE_LABELS } from './searchStrings';
 import { scenarios } from '@/data/scenarios';
 import { rulePacks } from '@/data/rules';
 import { referenceEntries } from '@/data/reference';
@@ -26,6 +27,14 @@ export function collectContentCopy(): Record<string, string> {
 
   for (const [name, value] of Object.entries(OUTCOME_LABELS)) {
     entries[`lib/copy/outcomeStrings.ts:OUTCOME_LABELS.${name}`] = value;
+  }
+
+  for (const [name, value] of Object.entries(SEARCH_LABELS)) {
+    entries[`lib/copy/searchStrings.ts:SEARCH_LABELS.${name}`] = value;
+  }
+
+  for (const [name, value] of Object.entries(CONTENT_TYPE_LABELS)) {
+    entries[`lib/copy/searchStrings.ts:CONTENT_TYPE_LABELS.${name}`] = value;
   }
 
   for (const scenario of scenarios) {
@@ -93,6 +102,14 @@ export function collectPasal52Entries(): Pasal52Entry[] {
 
   for (const [name, value] of Object.entries(strings)) {
     if (typeof value === 'string') entries.push({ source: `lib/copy/strings.ts:${name}`, text: value, isExcludedStatement: false });
+  }
+
+  for (const [name, value] of Object.entries(SEARCH_LABELS)) {
+    entries.push({ source: `lib/copy/searchStrings.ts:SEARCH_LABELS.${name}`, text: value, isExcludedStatement: false });
+  }
+
+  for (const [name, value] of Object.entries(CONTENT_TYPE_LABELS)) {
+    entries.push({ source: `lib/copy/searchStrings.ts:CONTENT_TYPE_LABELS.${name}`, text: value, isExcludedStatement: false });
   }
 
   for (const scenario of scenarios) {

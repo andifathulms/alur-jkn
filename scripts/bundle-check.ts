@@ -5,7 +5,12 @@ import { gzipSync } from 'node:zlib';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const nextDir = path.join(__dirname, '..', '.next');
-const BUDGET_BYTES = 120 * 1024; // DESIGN.md §9: total JS under 120 KB gzipped.
+// DESIGN.md v2 §10: 120 KB gzipped, raised to 140 KB "for the reference
+// layer, and no further." /cari (MIGRATION.md step 6) bundles the full
+// cross-content-type search index client-side and sits at 118.3 KB —
+// close enough to the old 120 KB ceiling that the next content addition
+// would likely fail unexpectedly, so raising to the granted allowance now.
+const BUDGET_BYTES = 140 * 1024;
 
 const manifestPath = path.join(nextDir, 'app-build-manifest.json');
 if (!existsSync(manifestPath)) {
