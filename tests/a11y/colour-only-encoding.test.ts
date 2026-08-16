@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { payerClasses } from '@/components/handoff/payerStyle';
-import type { Payer } from '@/lib/scenario/schema';
+import type { Payer } from '@/lib/content/outcome';
 
 const PAYERS: Payer[] = [
   { type: 'jkn', label: 'JKN' },

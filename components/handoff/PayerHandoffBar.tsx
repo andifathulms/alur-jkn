@@ -1,4 +1,4 @@
-import type { PayerRouting } from '@/lib/scenario/schema';
+import type { PayerRouting } from '@/lib/content/outcome';
 import { payerClasses } from './payerStyle';
 
 /**

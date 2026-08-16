@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { scanAll } from '@/lib/copy/check';
 import * as strings from '@/lib/copy/strings';
+import { OUTCOME_LABELS } from '@/lib/copy/outcomeStrings';
 import { scenarios } from '@/data/scenarios';
 import { rulePacks } from '@/data/rules';
 import { scanText } from '@/lib/copy/check';
@@ -21,6 +22,12 @@ describe('no-verdict copy scan', () => {
       entries[`${scenario.id}.explanation`] = scenario.explanation;
       entries[`${scenario.id}.nextAction`] = scenario.nextAction;
       entries[`${scenario.id}.questionToAsk`] = scenario.questionToAsk;
+      if (scenario.outcome.type === 'depends') {
+        entries[`${scenario.id}.outcome.question`] = scenario.outcome.question;
+      }
+    }
+    for (const [name, value] of Object.entries(OUTCOME_LABELS)) {
+      entries[`OUTCOME_LABELS.${name}`] = value;
     }
     for (const pack of rulePacks) {
       for (const rule of pack.rules) {

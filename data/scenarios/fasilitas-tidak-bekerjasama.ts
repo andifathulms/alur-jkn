@@ -1,11 +1,15 @@
-import type { Scenario } from '@/lib/scenario/schema';
+import type { Scenario } from '@/lib/content/scenario';
 
 export const fasilitasTidakBekerjasama: Scenario = {
+  contentType: 'scenario',
   id: 'fasilitas-tidak-bekerjasama',
   title: 'Fasilitas tidak bekerja sama dengan BPJS Kesehatan',
   explanation:
     'Pelayanan di fasilitas kesehatan yang tidak bekerja sama dengan BPJS Kesehatan tidak dijamin JKN, kecuali dalam keadaan gawat darurat. Kalau ini keadaan gawat darurat, langsung dapat pelayanan di fasilitas mana pun sekarang — peserta akan dipindahkan ke fasilitas yang bekerja sama setelah kondisi stabil.',
-  routing: { type: 'single', payer: { type: 'self', label: 'Mandiri, kecuali keadaan gawat darurat' } },
+  outcome: {
+    type: 'depends',
+    question: 'Apakah fasilitas ini bekerja sama dengan BPJS Kesehatan, dan kalau tidak, fasilitas mana terdekat yang bekerja sama?',
+  },
   ruleRefs: [{ packId: 'perpres-82-2018', ruleId: 'gawat-darurat-akses-langsung' }],
   nextAction:
     'Jika bukan keadaan gawat darurat, minta rujukan atau arahan ke fasilitas kesehatan terdekat yang bekerja sama dengan BPJS Kesehatan.',

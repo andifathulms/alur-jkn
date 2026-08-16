@@ -1,4 +1,4 @@
-import { ScenarioSchema, type Scenario } from '@/lib/scenario/schema';
+import { ScenarioSchema, type Scenario } from '@/lib/content/scenario';
 import { findRule } from '@/lib/rules/loader';
 import { rulePacks } from '@/data/rules';
 

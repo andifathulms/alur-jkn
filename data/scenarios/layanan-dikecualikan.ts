@@ -1,11 +1,12 @@
-import type { Scenario } from '@/lib/scenario/schema';
+import type { Scenario } from '@/lib/content/scenario';
 
 export const layananDikecualikan: Scenario = {
+  contentType: 'scenario',
   id: 'layanan-dikecualikan',
   title: 'Layanan yang dikecualikan dari penjaminan',
   explanation:
     'Sejumlah pelayanan dikecualikan dari penjaminan JKN: tujuan estetika, penanganan infertilitas, pengobatan alternatif dan komplementer yang belum dinyatakan efektif, serta pelayanan yang bersifat eksperimental. Daftar ini tetap terbatas — sebagian besar layanan lain tetap dijamin melalui jalur yang berlaku.',
-  routing: { type: 'single', payer: { type: 'self', label: 'Mandiri untuk layanan yang dikecualikan' } },
+  outcome: { type: 'excluded', pasal52Article: 'Pasal 52' },
   ruleRefs: [{ packId: 'perpres-82-2018', ruleId: 'layanan-dikecualikan' }],
   nextAction:
     'Minta petugas menunjukkan apakah layanan yang dimaksud termasuk dalam daftar pengecualian, dan tanyakan alternatif yang tetap dijamin.',

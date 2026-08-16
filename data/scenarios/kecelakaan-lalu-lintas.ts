@@ -1,15 +1,19 @@
-import type { Scenario } from '@/lib/scenario/schema';
+import type { Scenario } from '@/lib/content/scenario';
 
 export const kecelakaanLaluLintas: Scenario = {
+  contentType: 'scenario',
   id: 'kecelakaan-lalu-lintas',
   title: 'Kecelakaan lalu lintas',
   explanation:
     'Untuk kasus kecelakaan lalu lintas, program jaminan kecelakaan lalu lintas wajib (Jasa Raharja) menanggung lebih dulu sampai batas tertentu sesuai hak kelas rawat. Setelah batas itu, JKN melanjutkan penjaminan. Ini pembagian antar-penjamin, bukan penolakan.',
-  routing: {
-    type: 'coordination',
-    primary: { type: 'jasaRaharja', label: 'Jasa Raharja' },
-    primaryLimitNote: 'sampai batas nilai sesuai hak kelas rawat peserta',
-    continuesWith: { type: 'jkn', label: 'JKN' },
+  outcome: {
+    type: 'payer',
+    routing: {
+      type: 'coordination',
+      primary: { type: 'jasaRaharja', label: 'Jasa Raharja' },
+      primaryLimitNote: 'sampai batas nilai sesuai hak kelas rawat peserta',
+      continuesWith: { type: 'jkn', label: 'JKN' },
+    },
   },
   ruleRefs: [{ packId: 'perpres-82-2018', ruleId: 'kecelakaan-lalu-lintas-koordinasi' }],
   nextAction:

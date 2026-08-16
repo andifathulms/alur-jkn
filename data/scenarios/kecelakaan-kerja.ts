@@ -1,15 +1,19 @@
-import type { Scenario } from '@/lib/scenario/schema';
+import type { Scenario } from '@/lib/content/scenario';
 
 export const kecelakaanKerja: Scenario = {
+  contentType: 'scenario',
   id: 'kecelakaan-kerja',
   title: 'Kecelakaan kerja atau penyakit akibat kerja',
   explanation:
     'Untuk kasus kecelakaan kerja atau penyakit akibat kerja, program jaminan kecelakaan kerja menanggung lebih dulu. JKN melanjutkan penjaminan apabila hak jaminan kecelakaan kerja telah habis atau tidak mencakup layanan yang diperlukan. Ini pembagian antar-penjamin, bukan penolakan.',
-  routing: {
-    type: 'coordination',
-    primary: { type: 'jaminanKecelakaanKerja', label: 'Jaminan Kecelakaan Kerja' },
-    primaryLimitNote: 'sampai hak jaminan kecelakaan kerja habis atau tidak lagi mencakup layanan',
-    continuesWith: { type: 'jkn', label: 'JKN' },
+  outcome: {
+    type: 'payer',
+    routing: {
+      type: 'coordination',
+      primary: { type: 'jaminanKecelakaanKerja', label: 'Jaminan Kecelakaan Kerja' },
+      primaryLimitNote: 'sampai hak jaminan kecelakaan kerja habis atau tidak lagi mencakup layanan',
+      continuesWith: { type: 'jkn', label: 'JKN' },
+    },
   },
   ruleRefs: [{ packId: 'perpres-82-2018', ruleId: 'kecelakaan-kerja-koordinasi' }],
   nextAction:

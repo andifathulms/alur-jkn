@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { emptyAnswers } from '@/lib/scenario/resolve';
+import { emptyAnswers } from '@/lib/content/resolve';
 import { scanText } from '@/lib/copy/check';
 
 const ADMINISTRATIVE_FIELDS = [

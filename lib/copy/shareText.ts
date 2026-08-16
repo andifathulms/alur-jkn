@@ -1,4 +1,4 @@
-import type { Scenario } from '@/lib/scenario/schema';
+import type { Scenario } from '@/lib/content/scenario';
 import type { Rule } from '@/lib/rules/schema';
 import { UNOFFICIAL_STATEMENT } from './strings';
 

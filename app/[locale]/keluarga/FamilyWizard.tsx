@@ -7,7 +7,7 @@ import {
   nextQuestion,
   resolveScenarioId,
   type AdministrativeAnswers,
-} from '@/lib/scenario/resolve';
+} from '@/lib/content/resolve';
 import { getScenario } from '@/data/scenarios';
 import { rulePacks } from '@/data/rules';
 import { findRule } from '@/lib/rules/loader';

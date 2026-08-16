@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { EmergencyBanner } from '@/components/emergency/EmergencyBanner';
 import { QuestionCard } from '@/components/question/QuestionCard';
-import { PayerHandoffBar } from '@/components/handoff/PayerHandoffBar';
+import { OutcomeDisplay } from '@/components/state/OutcomeDisplay';
 import { RuleCitationList } from '@/components/rules/RuleCitationList';
 import { ShareCard } from '@/components/share/ShareCard';
 import { scenarios } from '@/data/scenarios';
@@ -44,7 +44,7 @@ export default function ScenarioDetailPage({ params }: { params: { scenario: str
           <div className="space-y-6">
             <h1 className="text-heading font-medium">{scenario.title}</h1>
             <p className="text-body-lg">{scenario.explanation}</p>
-            <PayerHandoffBar routing={scenario.routing} />
+            <OutcomeDisplay outcome={scenario.outcome} />
             <QuestionCard nextAction={scenario.nextAction} questionToAsk={scenario.questionToAsk} />
           </div>
 

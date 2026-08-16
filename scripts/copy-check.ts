@@ -1,6 +1,7 @@
 import { scanAll } from '../lib/copy/check';
 import * as strings from '../lib/copy/strings';
 import { SHARE_TEMPLATE_LABELS } from '../lib/copy/shareText';
+import { OUTCOME_LABELS } from '../lib/copy/outcomeStrings';
 import { scenarios } from '../data/scenarios';
 import { rulePacks } from '../data/rules';
 
@@ -14,10 +15,17 @@ for (const [name, value] of Object.entries(SHARE_TEMPLATE_LABELS)) {
   entries[`lib/copy/shareText.ts:SHARE_TEMPLATE_LABELS.${name}`] = value;
 }
 
+for (const [name, value] of Object.entries(OUTCOME_LABELS)) {
+  entries[`lib/copy/outcomeStrings.ts:OUTCOME_LABELS.${name}`] = value;
+}
+
 for (const scenario of scenarios) {
   entries[`scenario:${scenario.id}:explanation`] = scenario.explanation;
   entries[`scenario:${scenario.id}:nextAction`] = scenario.nextAction;
   entries[`scenario:${scenario.id}:questionToAsk`] = scenario.questionToAsk;
+  if (scenario.outcome.type === 'depends') {
+    entries[`scenario:${scenario.id}:outcome.question`] = scenario.outcome.question;
+  }
 }
 
 for (const pack of rulePacks) {

@@ -1,161 +1,136 @@
 # PRD — Alur JKN
 
-**Patients confront hospital staff every day over what JKN covers. This doesn't answer that question — it explains the system, and hands the patient the right question to ask.**
+**Patients confront hospital staff every day over what JKN covers. This explains the system properly — the routes, the exclusions, the tariff logic — and hands the patient the right question instead of a verdict.**
 
 | | |
 |---|---|
-| **Status** | Draft — pre-implementation |
+| **Status** | v2 — revision of a shipped v1 |
 | **Owner** | Andi Fathul Mukminin Salahuddin |
 | **Type** | Public-interest tool, open source |
 | **Deployment** | GitHub Pages (static export, no server, no runtime network) |
 | **Language** | Plain Indonesian. English secondary. |
 | **Design** | See `DESIGN.md`. Authoritative for every visual and copy decision. |
-| **Sibling** | Rinci. Cited rule packs, verification dates, refuse-rather-than-guess. |
-
-*Name: explanatory. Uses the programme name (JKN) rather than the institution (BPJS), because the product must never read as an official BPJS channel. Alternative: **Rute JKN**.*
 
 ---
 
-## 1. Problem
+## 1. What changed from v1, and why
 
-Medical staff in Indonesian hospitals have the same conversation several times a day. A patient or family arrives expecting coverage, is told the situation is different from what they assumed, and it turns into a confrontation — at a moment when everyone involved is already under strain.
+v1 shipped too thin. It carried ten administrative scenarios and nothing else, because an earlier constraint — "the app never asks a clinical question" — was drawn too broadly and removed the entire reference layer along with it.
 
-The misunderstandings are not random. They cluster around a small number of rules that are genuinely counterintuitive, and that nothing explains well:
+**That constraint conflated two different things:**
 
-- **Tiered referral.** You start at a first-level facility and get referred up. Arriving directly at a hospital without a referral is not covered — except in emergencies.
-- **Self-requested referral** is specifically excluded.
-- **Emergency has a definition.** The family's sense of emergency and the triage criteria are different things.
-- **Traffic and work injuries route to a different payer first** — the compulsory traffic-accident programme, or work-injury cover. This is almost always heard as "you're not covered."
-- **Card status.** An inactive card is an administrative fact discovered at the worst moment.
-- **A short list of genuinely excluded services** — aesthetics, infertility treatment, alternative medicine, experimental treatment.
+- **Diagnostic questions** — *what are your symptoms, how severe is it* — genuinely dangerous, and still banned.
+- **Navigational lookups** — *which poli, which procedure, which device, which drug* — administrative reference material, and most of what users actually need.
 
-**This is not a knowledge gap that a leaflet fixes**, because the leaflet is read by nobody at 2am. It's fixed by giving staff something to show, and giving families something to take away.
+v2 keeps every safety rail and adds the layer that was missing.
 
-## 2. The three principles
+**And v2 corrects a misconception that v1 did nothing about** — one that is probably the single largest cause of confrontation in this domain. See §3.
 
-### 2.1 It never renders a verdict
+## 2. The three principles (unchanged)
 
-**The app must never tell anyone whether their case is covered.** Coverage depends on medical indication, diagnosis coding, facility partnership status, card status, and clinical judgement — none of which a static site can know.
+**2.1 Never a verdict on a specific case.** Coverage depends on medical indication, diagnosis coding, facility partnership, card status and clinical judgement. The app explains rules and produces **the question to ask**.
 
-If a patient waves a wrong answer at an admission desk, the app has made things worse: staff now argue with a screen as well as a person.
+**2.2 Never discourage seeking care.** Binding, highest priority. Every path leads with: if this could be an emergency, go now — coverage is sorted afterwards. Perpres 82/2018 Pasal 63 provides that a participant needing emergency care can be served directly at any facility, and non-partnered facilities are covered in emergencies with transfer once stable.
 
-So the app explains rules, cites them, and produces **the question to ask**. That is the actual output of every screen. It converts a confrontation into a conversation.
+**2.3 Coverage is routing, not judgement.** Payer identity is what gets encoded. "You pay" is a lane, not a failure.
 
-### 2.2 It never discourages seeking care
+## 3. The correction v2 exists to make
 
-**Binding, and the highest-priority rule in the product.** If someone reads "this might not be covered" and does not go to an emergency department, the app has caused serious harm.
+**"Not covered" is usually staff shorthand for something else, and patients hear it as refusal.**
 
-Every path says: **if this could be an emergency, go now — coverage is sorted afterwards.** That is also what the regulation says. Perpres 82/2018 Pasal 63 provides that a participant needing emergency care can obtain it directly at any health facility, and care at a non-partnered facility is excluded *except in emergencies*, with transfer to a partnered facility once the patient is stable.
+Take appendectomy. Coverage applies to appendectomy both conventionally and laparoscopically, as long as a doctor recommends it on medical grounds. A BPJS official put the underlying principle plainly: BPJS Kesehatan does not sort by type of illness and procedure.
 
-That is the single most misunderstood provision in the system, and the one most worth spreading.
+What actually determines what you're offered is the tariff system. BPJS pays by package under **INA-CBG**, so cost is not itemised by surgical method — but the hospital has its own rules about which method it can deliver fully within that package. Open surgery is typically easier to approve; laparoscopy depends on medical indication and hospital policy. The appendectomy tariff itself varies by hospital class A–D and across five regional bands.
 
-### 2.3 Coverage is routing, not judgement
+So a clinician saying *"laparoskopi nggak ditanggung"* is being accurate about their hospital and inaccurate about the regulation. The patient becomes angry at BPJS for something BPJS did not do.
 
-Several of these cases are **coordination between payers, not refusal**. Traffic-accident care is excluded only up to the amount the compulsory traffic-accident programme covers at the participant's ward-class entitlement — so that payer settles first and JKN continues beyond their cap.
+**Teaching this one distinction is the highest-value thing the product can do**, and it becomes a hard rule in the content model:
 
-*"You're not covered"* and *"someone else pays first, then JKN"* are the same fact and completely different messages. The product is built so the second one is structurally unavoidable: **payer identity is what gets encoded, everywhere, and "you pay" is one lane among several rather than a failure state.** See `DESIGN.md` §2.
+> **The only things this app may describe as "not covered" are the items enumerated in Perpres 82/2018 Pasal 52.** Everything else is routing, tariff, medical indication, or hospital capability — and must be described as such.
 
-## 3. Users
+## 4. Users
 
-**Primary: hospital staff.** Nurses, admission clerks, BPJS liaison officers. They have the conversation daily, they have an obvious incentive, and they are a repeat audience. Designed as an *explaining aid* — a screen turned toward a family and walked through in sixty seconds.
+**Primary: hospital staff.** They have the conversation daily and are a repeat audience. v2's reference layer serves them directly — poli rules, device ceilings, the exclusion list — as a lookup they can trust mid-conversation.
 
-**Secondary: patients and families**, reached mostly through staff and through sharing. Arriving in crisis, often elderly, often on a poor connection, often distressed.
+**Secondary: patients and families**, reached through staff and through sharing.
 
-**Adoption follows the staff.** Aimed directly at patients, it never gets found.
+## 5. Content model — three types
 
-## 4. Scope
+v1 had one. v2 has three, and this is the core structural change.
 
-**Scenarios in v1** — each a real cause of confrontation:
+### 5.1 Scenario — guided
+An administrative situation, one question per screen, ending in a next action and a question to ask. The v1 content, retained.
 
-1. Arrived at hospital without a referral
-2. Self-requested referral
-3. Is this an emergency? (criteria, and the always-go rule)
-4. Traffic accident
-5. Work injury
-6. Card inactive or in arrears
-7. Facility not partnered with BPJS
-8. Room class and upgrading
-9. Medicines outside the national formulary
-10. Genuinely excluded services
+*Arrived without a referral · Self-requested referral · Is this an emergency · Traffic accident · Work injury · Card inactive · Facility not partnered · Room class and upgrading · Medicines outside the formulary · Excluded services*
 
-**Each scenario produces:** what the rule says, its citation, what happens next, what to bring, and **the question to ask**.
+### 5.2 Reference — browsable
+Authoritative material, searchable, staff-oriented. **This is what v1 lacked.**
 
-## 5. Non-goals — several are binding
+- **INA-CBG explained.** The package system, class and regional variation, and why it produces the "not covered" shorthand. **The spine of the whole product** — every condition page links back to it.
+- **The Pasal 52 exclusion list, in full.** Around twenty-one items in plain language with real examples. Genuinely authoritative, genuinely a list, and the only place the app says "not covered".
+- **Poli directory.** Which specialties need a referral, referral validity, internal referral rules, when re-referral is required.
+- **Devices and their ceilings.** Glasses, hearing aids, dentures, prosthetics — tariff caps and replacement intervals.
+- **Fornas.** Covered medicines come from the national formulary; what happens when a doctor prescribes outside it.
+- **Class and naik kelas.** The rules on paying the difference.
+
+### 5.3 Condition — per-procedure
+For a named procedure or condition, and **never a verdict**:
+
+1. **The route** — which poli, referral or emergency bypass
+2. **What determines the method** — medical indication, not a coverage rule
+3. **Why you may be offered one option** — the package tariff, linked to the INA-CBG reference
+4. **What can still cost money** — class upgrade, non-formulary drugs, devices above ceiling
+5. **The question to ask** — e.g. *"Metode mana yang sesuai indikasi medis saya, dan apakah rumah sakit ini bisa melakukannya dalam paket JKN?"*
+
+**v1 target: eight to twelve conditions**, chosen with the hospital team by frequency of confrontation.
+
+## 6. Non-goals
 
 - **No coverage verdict.** §2.1.
-- **No medical advice, no triage, no symptom assessment.**
-- **The app never asks for clinical information.** Questions are administrative only — did you come with a referral, was this a road accident, is the facility partnered. This keeps the product out of medical-advice territory and out of health-data territory in one move.
-- **No card status lookup, no login, no queue booking, no facility finder.** Those need authentication and a backend, and they are Mobile JKN's job.
-- **Zero data collection.** No analytics on inputs, no storage of answers, nothing leaves the device.
-- **No claim of official status.** Not a BPJS product, not a government channel. Visually and explicitly distinct. See `DESIGN.md` §2 on why the palette avoids institutional colours.
-- **No cost estimates or tariff figures.**
-
-## 6. Features
-
-### 6.1 The pathway
-The referral system drawn as a transit map — first-level facility, hospital as an interchange, sub-specialist onward, and the emergency route entering the hospital directly as a separate line. Your position is marked. `DESIGN.md` §3.
-
-### 6.2 The two doors
-**Staff mode** — flat scenario list, one tap to the explanation, readable across a desk, optimised for speed.
-**Family mode** — one question per screen, generous spacing, slower on purpose.
-
-Same content, two entry paths.
-
-### 6.3 The payer handoff
-For coordination cases, the split rendered as a bar: the first payer's portion up to their limit, then JKN continuing. Makes §2.3 visible rather than asserted.
-
-### 6.4 The question card
-Every scenario ends with a plainly worded question to ask staff, with the regulation reference attached. Copyable and shareable.
-
-### 6.5 Share
-A clean card per scenario, sized and worded for WhatsApp. This is how it actually spreads — the family forwards it to the relative asking questions from another city.
-
-### 6.6 Rule reference
-Every parameter with its instrument, article, and verification date. Browsable independently.
+- **No diagnostic questions, no symptom entry, no triage, no severity assessment.** Navigational lookups are fine; diagnosis is not.
+- **No cost estimates, no tariff figures shown to patients.** The INA-CBG explainer describes the *mechanism*; it does not publish rupiah amounts, which vary by class and region and would be read as a promise.
+- **No card status lookup, no login, no queue booking, no facility finder.** Backend, and Mobile JKN's job.
+- **Zero data collection.** Nothing stored, transmitted, or measured.
+- **No claim of official status.**
 
 ## 7. Rules and sources
 
-Cited rule packs, Rinci's architecture: each entry records the value, its instrument and article, a source URL, and `verifiedAt`. **The build fails on an uncited rule.**
+Cited rule packs: value, instrument, article, source URL, `verifiedAt`. **The build fails on an uncited rule.**
 
-Primary instruments: Perpres 82/2018 and its amendments (Perpres 75/2019, 64/2020, 59/2024); Permenkes 47/2018 for emergency criteria; Permenkes 28/2014; BPJS Kesehatan regulations.
+Primary instruments: Perpres 82/2018 and amendments (75/2019, 64/2020, 59/2024); Permenkes 47/2018 (emergency criteria); Permenkes 28/2014; the INA-CBG tariff Permenkes; Fornas and the device compendium; BPJS Kesehatan regulations.
 
-**Staleness is a safety issue here, not a tidiness issue.** Rules change and wrong guidance has a real cost. Every scenario shows its verification date; packs past a review threshold display a warning; `UPDATING.md` documents re-verification for a stranger.
+Staleness is a safety issue here. Verification dates surface in the UI; packs past review threshold warn; `UPDATING.md` documents re-verification for a stranger.
 
-## 8. Milestones
+## 8. Milestones (from the shipped v1)
 
 | | | |
 |---|---|---|
-| **M0** | Listen | **Interview hospital staff before writing code.** They know the exact five misconceptions and the words patients use. Half a day, worth more than any spec. Then: rule schema, validator, citation architecture. |
-| **M1** | Rules | The ten scenarios as cited packs, each with next action and question. Console only. |
-| **M2** | The pathway | Transit map, position marking, emergency route, family mode. **Ship publicly here.** |
-| **M3** | Staff mode | Fast scenario list, desk-readable layout, print sheet. |
-| **M4** | Coordination | Payer handoff visual for accident and work-injury cases. |
-| **M5** | Distribution | WhatsApp share cards, rule reference, `UPDATING.md`. |
+| **M1** | Model | Content model extended to three types. Scenario content migrated unchanged. |
+| **M2** | The spine | INA-CBG reference page. **Build this first** — everything else links to it. |
+| **M3** | Reference | Pasal 52 list, poli directory, device ceilings, Fornas, class rules. |
+| **M4** | Conditions | Eight to twelve condition pages on the §5.3 template. |
+| **M5** | Navigation | Search across all three types; staff-mode reference index. |
+| **M6** | Distribution | Share cards per reference and condition; print sheets. |
 
 ## 9. Success criteria
 
-- No screen anywhere states or implies whether the user's case is covered.
-- Every scenario ends with a next action and a question to ask.
-- The emergency "go now" message appears before any coverage content on every path.
-- No clinical question is asked anywhere.
-- Every rule carries an instrument, article, and verification date.
-- Nothing is collected, stored, or transmitted.
+- No screen states or implies whether the user's case is covered.
+- **Nothing outside Pasal 52 is described as "not covered"** — asserted by test.
+- Every condition page carries all five sections in §5.3.
+- Emergency message precedes coverage content on every path.
+- No diagnostic question anywhere.
+- Every rule carries instrument, article, and verification date.
+- Nothing collected, stored, or transmitted.
 - Works offline, on a slow connection, on an old Android.
-- Meets the type, contrast, and target-size floors in `DESIGN.md` §7.
-- A staff member can explain a scenario from the screen in under sixty seconds.
+- A staff member can answer a poli or device question from the reference in under fifteen seconds.
 
-## 10. Deployment
-
-`output: 'export'`, `basePath` matching the repository name, `.nojekyll` in the output root. Rule validation gates the deploy. Fonts self-hosted. Verify under the production `basePath` with `pnpm preview` before pushing.
-
-## 11. Risks
+## 10. Risks
 
 | Risk | Mitigation |
 |---|---|
-| **Wrong guidance sends someone away from care.** | §2.2 is binding. Emergency message precedes all coverage content, asserted by test. Never a discouraging framing. |
-| **A verdict makes confrontations worse.** | §2.1 binding, banned-phrase check in CI, copy review before release. |
-| **Rule staleness.** | Per-rule verification dates surfaced in the UI, review thresholds, `UPDATING.md`. |
-| **Read as an official BPJS channel.** | Programme name not institution name, no institutional colours, explicit unofficial statement, no government branding. |
-| **Health data exposure.** | The app never asks a clinical question and never stores anything. Structural, not policy. |
-| **Author is an ASN publishing about a government programme.** | Plainly personal and unofficial. Worth a word with OIKN and with the hospital before launch. |
-| **Staff never adopt it.** | M0 is interviews, not code. If staff don't recognise their own daily conversation in it, rebuild it before shipping. |
+| **Wrong guidance sends someone away from care.** | §2.2 binding; emergency-first asserted by test. |
+| **A condition page drifts into a verdict.** | The Pasal 52 rule in §3 is enforced by a banned-phrase check plus a schema that has no coverage boolean. |
+| **Tariff figures read as a price promise.** | No rupiah amounts in patient-facing content. Mechanism only. |
+| **Reference content goes stale.** | Verification dates surfaced, review thresholds, `UPDATING.md`. |
+| **Read as an official channel.** | Programme name not institution name, no institutional colours, explicit unofficial statement. |
+| **Condition list chosen by guesswork.** | Chosen with the hospital team by observed frequency, not by what's easy to write. |

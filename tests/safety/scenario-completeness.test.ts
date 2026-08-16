@@ -16,7 +16,7 @@ describe('scenario completeness', () => {
   it('no scenario models coverage as a boolean field', () => {
     for (const s of scenarios) {
       expect(s).not.toHaveProperty('isCovered');
-      expect(s.routing.type === 'single' || s.routing.type === 'coordination').toBe(true);
+      expect(['payer', 'excluded', 'depends']).toContain(s.outcome.type);
     }
   });
 });

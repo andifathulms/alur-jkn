@@ -1,4 +1,4 @@
-import type { Payer } from '@/lib/scenario/schema';
+import type { Payer } from '@/lib/content/outcome';
 
 /**
  * Colour encodes payer identity only (DESIGN.md §2). Every lane also gets a
