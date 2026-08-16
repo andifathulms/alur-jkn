@@ -15,6 +15,7 @@ export const naikKelasRawat: Scenario = {
       continuesWith: { type: 'self', label: 'Mandiri untuk selisih biaya kelas yang dipilih' },
     },
   },
+  position: { type: 'station', stationId: 'naikKelas' },
   ruleRefs: [{ packId: 'perpres-82-2018', ruleId: 'naik-kelas-rawat' }],
   nextAction:
     'Sampaikan ke bagian administrasi rumah sakit keinginan naik kelas, dan minta rincian selisih biaya per hari sebelum menyetujui.',

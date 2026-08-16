@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from 'node:fs';
+import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -9,15 +9,12 @@ import { fileURLToPath } from 'node:url';
  *
  * A route satisfies this with either `StationFragment` (the local,
  * cropped view — build order step 2) or `NetworkMap` (the full map — step
- * 3, so far only the home page). Both carry a `sr-only` text equivalent
- * by construction (see their own tests); this script only checks that
- * one of the two is present on every route that renders `EmergencyBanner`
- * (every "coverage" route, per invariant 1).
- *
- * As of this script's introduction (before build order step 2) neither
- * component existed; it correctly reported that zero routes carried one.
- * Not yet a blocking gate — most coverage routes still don't render
- * either component (step 4 wires StationFragment onto them).
+ * 3). Both carry a `sr-only` text equivalent by construction (see their
+ * own tests). A page can carry the network directly, or indirectly by
+ * rendering a component (e.g. `FamilyWizard`, `ConditionTemplate`,
+ * `ReferenceEntryListPage`) that itself renders one of the two — this
+ * script follows local imports transitively so page.tsx files that
+ * delegate rendering still count.
  */
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
@@ -25,11 +22,11 @@ const appDir = path.join(root, 'app');
 const stationFragmentPath = path.join(root, 'components', 'pathway', 'StationFragment.tsx');
 const networkMapPath = path.join(root, 'components', 'pathway', 'NetworkMap.tsx');
 
-function walk(dir: string): string[] {
+function walk(dir: string, matcher: (name: string) => boolean): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) return walk(full);
-    return entry.name === 'page.tsx' ? [full] : [];
+    if (entry.isDirectory()) return walk(full, matcher);
+    return matcher(entry.name) ? [full] : [];
   });
 }
 
@@ -50,15 +47,51 @@ if (!exists(stationFragmentPath) && !exists(networkMapPath)) {
   process.exit(1);
 }
 
+function resolveImport(fromFile: string, specifier: string): string | null {
+  if (!specifier.startsWith('.') && !specifier.startsWith('@/')) return null;
+  const base = specifier.startsWith('@/')
+    ? path.join(root, specifier.slice(2))
+    : path.join(path.dirname(fromFile), specifier);
+  const candidates = [base, `${base}.tsx`, `${base}.ts`, path.join(base, 'index.tsx'), path.join(base, 'index.ts')];
+  return candidates.find((c) => existsSync(c)) ?? null;
+}
+
+function localImportsOf(file: string, source: string): string[] {
+  const specifiers = [...source.matchAll(/from ['"]([^'"]+)['"]/g)].map((m) => m[1]!);
+  return specifiers.map((s) => resolveImport(file, s)).filter((p): p is string => p !== null);
+}
+
+const carriesNetworkCache = new Map<string, boolean>();
+
+function carriesNetwork(file: string, seen: Set<string> = new Set()): boolean {
+  if (carriesNetworkCache.has(file)) return carriesNetworkCache.get(file)!;
+  if (seen.has(file)) return false;
+  seen.add(file);
+
+  const source = readFileSync(file, 'utf-8');
+  if (source.includes('<StationFragment') || source.includes('<NetworkMap')) {
+    carriesNetworkCache.set(file, true);
+    return true;
+  }
+  const result = localImportsOf(file, source).some((imported) => carriesNetwork(imported, seen));
+  carriesNetworkCache.set(file, result);
+  return result;
+}
+
 let failed = false;
 let coverageRouteCount = 0;
 
-for (const file of walk(appDir)) {
+for (const file of walk(appDir, (name) => name === 'page.tsx' || name === 'layout.tsx')) {
+  if (path.basename(file) !== 'page.tsx') continue;
   const source = readFileSync(file, 'utf-8');
-  if (!source.includes('EmergencyBanner')) continue;
+  if (source.includes('redirect(')) continue; // pure redirect — renders nothing, no content to carry the network
+  const layoutFile = path.join(path.dirname(file), 'layout.tsx');
+  const rendersEmergencyBanner =
+    source.includes('<EmergencyBanner') || (existsSync(layoutFile) && readFileSync(layoutFile, 'utf-8').includes('<EmergencyBanner'));
+  if (!rendersEmergencyBanner) continue;
   coverageRouteCount++;
   const relative = path.relative(root, file);
-  if (!source.includes('StationFragment') && !source.includes('NetworkMap')) {
+  if (!carriesNetwork(file)) {
     failed = true;
     console.error(`map:check — FAIL ${relative}: renders EmergencyBanner but neither StationFragment nor NetworkMap`);
   }

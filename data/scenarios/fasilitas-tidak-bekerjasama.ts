@@ -10,6 +10,7 @@ export const fasilitasTidakBekerjasama: Scenario = {
     type: 'depends',
     question: 'Apakah fasilitas ini bekerja sama dengan BPJS Kesehatan, dan kalau tidak, fasilitas mana terdekat yang bekerja sama?',
   },
+  position: { type: 'station', stationId: 'rumahSakit' },
   ruleRefs: [{ packId: 'perpres-82-2018', ruleId: 'gawat-darurat-akses-langsung' }],
   nextAction:
     'Jika bukan keadaan gawat darurat, minta rujukan atau arahan ke fasilitas kesehatan terdekat yang bekerja sama dengan BPJS Kesehatan.',

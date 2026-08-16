@@ -8,6 +8,8 @@ import { isStale } from '@/lib/rules/schema';
 import { ConditionTemplate } from '@/components/condition/ConditionTemplate';
 import { CONDITION_SECTION_LABELS } from '@/lib/copy/conditionStrings';
 import { referenceHref } from '@/lib/content/reference';
+import { computeFragment } from '@/lib/network/fragment';
+import { network } from '@/lib/network/definition';
 
 /**
  * MIGRATION.md step 5. CLAUDE.md v2 invariant 6: every condition page
@@ -45,14 +47,15 @@ describe('condition content', () => {
       const rule = findRule(rulePacks, ref.packId, ref.ruleId);
       return { rule, stale: isStale(rule.citation.verifiedAt, now) };
     });
+    const fragment = computeFragment(network, condition.position);
 
     it('has no axe violations', async () => {
-      const { container } = render(<ConditionTemplate condition={condition} citedRules={citedRules} />);
+      const { container } = render(<ConditionTemplate condition={condition} citedRules={citedRules} fragment={fragment} />);
       expect(await axe(container)).toHaveNoViolations();
     });
 
     it('renders all five section labels in order', () => {
-      const { container } = render(<ConditionTemplate condition={condition} citedRules={citedRules} />);
+      const { container } = render(<ConditionTemplate condition={condition} citedRules={citedRules} fragment={fragment} />);
       const headings = Array.from(container.querySelectorAll('h2')).map((h) => h.textContent);
       const expectedOrder = [
         CONDITION_SECTION_LABELS.route,
@@ -66,14 +69,14 @@ describe('condition content', () => {
     });
 
     it('links to the INA-CBG reference — invariant 7', () => {
-      const { container } = render(<ConditionTemplate condition={condition} citedRules={citedRules} />);
+      const { container } = render(<ConditionTemplate condition={condition} citedRules={citedRules} fragment={fragment} />);
       const link = container.querySelector(`a[href="${referenceHref('ina-cbg')}"]`);
       expect(link).not.toBeNull();
     });
 
     it('never renders a coverage verdict phrase', async () => {
       const { scanText } = await import('@/lib/copy/check');
-      const { container } = render(<ConditionTemplate condition={condition} citedRules={citedRules} />);
+      const { container } = render(<ConditionTemplate condition={condition} citedRules={citedRules} fragment={fragment} />);
       expect(scanText(container.textContent ?? '', slug)).toEqual([]);
     });
   });

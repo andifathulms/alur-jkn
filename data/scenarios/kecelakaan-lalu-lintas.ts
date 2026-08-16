@@ -15,6 +15,7 @@ export const kecelakaanLaluLintas: Scenario = {
       continuesWith: { type: 'jkn', label: 'JKN' },
     },
   },
+  position: { type: 'station', stationId: 'rumahSakit' },
   ruleRefs: [{ packId: 'perpres-82-2018', ruleId: 'kecelakaan-lalu-lintas-koordinasi' }],
   nextAction:
     'Siapkan laporan kepolisian atau bukti kejadian kecelakaan jika ada, untuk proses klaim Jasa Raharja. Pihak fasilitas kesehatan yang akan mengoordinasikan penjaminan dengan Jasa Raharja dan JKN.',

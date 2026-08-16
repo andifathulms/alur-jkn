@@ -7,6 +7,7 @@ export const layananDikecualikan: Scenario = {
   explanation:
     'Sejumlah pelayanan dikecualikan dari penjaminan JKN: tujuan estetika, penanganan infertilitas, pengobatan alternatif dan komplementer yang belum dinyatakan efektif, serta pelayanan yang bersifat eksperimental. Daftar ini tetap terbatas — sebagian besar layanan lain tetap dijamin melalui jalur yang berlaku.',
   outcome: { type: 'excluded', pasal52Article: 'Pasal 52' },
+  position: { type: 'offNetwork', itemId: 'pelayanan-lain-di-luar-manfaat-jaminan-kesehatan' },
   ruleRefs: [{ packId: 'perpres-82-2018', ruleId: 'layanan-dikecualikan' }],
   nextAction:
     'Minta petugas menunjukkan apakah layanan yang dimaksud termasuk dalam daftar pengecualian, dan tanyakan alternatif yang tetap dijamin.',

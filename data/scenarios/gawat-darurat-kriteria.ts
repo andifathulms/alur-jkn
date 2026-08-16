@@ -10,6 +10,7 @@ export const gawatDaruratKriteria: Scenario = {
     type: 'depends',
     question: 'Apakah kondisi ini masuk kriteria gawat darurat menurut Permenkes 47/2018?',
   },
+  position: { type: 'station', stationId: 'rumahSakit' },
   ruleRefs: [
     { packId: 'perpres-82-2018', ruleId: 'gawat-darurat-akses-langsung' },
     { packId: 'permenkes-47-2018', ruleId: 'kriteria-gawat-darurat' },

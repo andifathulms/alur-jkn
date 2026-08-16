@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import { EmergencyBanner } from '@/components/emergency/EmergencyBanner';
+import { StationFragment } from '@/components/pathway/StationFragment';
 import { scenarios } from '@/data/scenarios';
 import { referenceEntries } from '@/data/reference';
 import { referenceHref } from '@/lib/content/reference';
+import { computeFragment } from '@/lib/network/fragment';
+import { network } from '@/lib/network/definition';
 
 /**
  * DESIGN.md v2 §7: "Staff mode. Flat scenario list plus the reference
@@ -15,7 +18,8 @@ export default function PetugasPage() {
     <div>
       <EmergencyBanner />
       <div className="max-w-5xl mx-auto px-4 py-8 sm:px-6">
-        <h1 className="text-heading font-medium mb-6">Mode petugas</h1>
+        <StationFragment fragment={computeFragment(network, null)} />
+        <h1 className="text-heading font-medium mb-6 mt-4">Mode petugas</h1>
         <div className="grid md:grid-cols-2 gap-8">
           <div>
             <h2 className="text-key font-medium mb-3">Skenario</h2>

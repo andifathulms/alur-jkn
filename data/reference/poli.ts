@@ -21,6 +21,7 @@ export const poli: Reference = {
   slug: 'poli',
   title: 'Poli — rujukan ke spesialis',
   summary: 'Kapan rujukan ke dokter spesialis diperlukan, berapa lama rujukan berlaku, dan kapan rujukan baru dibutuhkan.',
+  position: { type: 'station', stationId: 'subSpesialis' },
   entries: [
     {
       term: 'Rujukan ke poli spesialis',

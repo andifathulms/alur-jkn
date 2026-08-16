@@ -114,6 +114,44 @@ try {
   console.error(String(err instanceof Error ? err.message : err));
 }
 
+// --- Positions: every scenario/reference/condition position resolves against the real network ---
+// DESIGN.md v3 §5: "static inline SVG generated from the content schema's
+// existing position field." A typo'd stationId/itemId would otherwise only
+// surface as a thrown error deep in lib/network/fragment.ts at render time.
+
+try {
+  const { network } = await import('../lib/network/definition');
+  const stationIds = new Set(network.stations.map((s) => s.id));
+  const offNetworkIds = new Set(network.offNetwork.map((o) => o.id));
+
+  const { scenarios } = await import('../data/scenarios');
+  const { referenceEntries } = await import('../data/reference');
+  const { conditions } = await import('../data/conditions');
+
+  const checkPosition = (source: string, position: { type: 'station' | 'offNetwork'; stationId?: string; itemId?: string } | null) => {
+    if (!position) return;
+    if (position.type === 'station' && position.stationId && !stationIds.has(position.stationId)) {
+      failed = true;
+      console.error(`content:validate — ${source}: position references unknown station "${position.stationId}"`);
+    }
+    if (position.type === 'offNetwork' && position.itemId && !offNetworkIds.has(position.itemId)) {
+      failed = true;
+      console.error(`content:validate — ${source}: position references unknown off-network item "${position.itemId}"`);
+    }
+  };
+
+  for (const scenario of scenarios) checkPosition(`scenario:${scenario.id}`, scenario.position);
+  for (const reference of referenceEntries) checkPosition(`reference:${reference.slug}`, reference.position);
+  for (const condition of conditions) checkPosition(`condition:${condition.slug}`, condition.position);
+
+  console.log(
+    `content:validate — OK: ${scenarios.length + referenceEntries.length + conditions.length} content positions resolve against the network.`,
+  );
+} catch (err) {
+  failed = true;
+  console.error(String(err instanceof Error ? err.message : err));
+}
+
 if (failed) {
   console.error('content:validate — FAILED.');
   process.exit(1);

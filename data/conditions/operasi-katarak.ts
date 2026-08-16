@@ -13,6 +13,7 @@ export const operasiKatarak: Condition = {
   title: 'Operasi katarak',
   summary:
     'Fakoemulsifikasi dan ekstraksi konvensional ada dalam paket JKN yang sama — yang menentukan pilihan di rumah sakit Anda adalah indikasi medis dan peralatan yang tersedia, bukan aturan penjaminan.',
+  position: { type: 'station', stationId: 'rumahSakit' },
   route:
     'Operasi katarak dilakukan melalui jalur bedah mata di rumah sakit, setelah rujukan dari FKTP ke poli mata (atau rujukan internal dari dokter spesialis mata ke bedah, jika sudah dalam pemantauan). Operasi katarak umumnya bukan kondisi gawat darurat, sehingga jalur rujukan berjenjang biasa berlaku.',
   methodDeterminant:

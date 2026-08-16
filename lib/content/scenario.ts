@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { OutcomeSchema } from './outcome';
 import { RuleRefSchema } from './ruleRef';
+import { PositionSchema } from '@/lib/network/position';
 
 /**
  * v2 content model, type 1 of 3 (PRD.md §5.1) — an administrative
@@ -17,6 +18,8 @@ export const ScenarioSchema = z
     /** Explains the rule. Never a second-person verdict — pnpm copy:check scans this. */
     explanation: z.string().min(1),
     outcome: OutcomeSchema,
+    /** DESIGN.md v3 §5/§7: where this scenario sits on the network — StationFragment renders from this. */
+    position: PositionSchema,
     ruleRefs: z.array(RuleRefSchema).min(1),
     /** CLAUDE.md invariant: every scenario carries a next action. */
     nextAction: z.string().min(1),

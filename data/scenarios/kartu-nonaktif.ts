@@ -10,6 +10,7 @@ export const kartuNonaktif: Scenario = {
     type: 'depends',
     question: 'Berapa besar tunggakan dan denda pelayanan yang berlaku, dan bagaimana proses pengaktifan kembali?',
   },
+  position: { type: 'station', stationId: 'rumahSakit' },
   ruleRefs: [{ packId: 'perpres-82-2018', ruleId: 'kartu-tidak-aktif' }],
   nextAction:
     'Lunasi tunggakan iuran melalui kanal resmi BPJS Kesehatan (Mobile JKN, kantor cabang, atau mitra pembayaran) untuk mengaktifkan kembali status kepesertaan.',

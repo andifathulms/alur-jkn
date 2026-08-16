@@ -10,6 +10,7 @@ export const obatDiLuarFornas: Scenario = {
     type: 'depends',
     question: 'Apakah obat ini bisa diajukan lewat komite medik, dan bagaimana status penjaminannya jika disetujui?',
   },
+  position: { type: 'station', stationId: 'obatNonFornas' },
   ruleRefs: [{ packId: 'permenkes-formularium-nasional', ruleId: 'obat-di-luar-fornas' }],
   nextAction:
     'Minta dokter yang merawat mengajukan usulan penggunaan obat tersebut ke komite medik fasilitas untuk ditinjau.',

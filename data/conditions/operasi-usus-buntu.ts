@@ -14,6 +14,7 @@ export const operasiUsusBuntu: Condition = {
   title: 'Operasi usus buntu (apendektomi)',
   summary:
     'Baik operasi terbuka maupun laparoskopi ada dalam paket JKN yang sama — yang menentukan pilihan di rumah sakit Anda adalah indikasi medis dan kemampuan rumah sakit, bukan aturan penjaminan.',
+  position: { type: 'station', stationId: 'rumahSakit' },
   route:
     'Operasi usus buntu biasanya dilakukan melalui jalur bedah umum di rumah sakit. Jika ini kondisi akut dengan risiko darurat, jalur gawat darurat berlaku tanpa perlu rujukan lebih dulu — datang langsung ke IGD. Jika tidak akut, rujukan dari FKTP ke poli bedah tetap diperlukan lebih dulu.',
   methodDeterminant:

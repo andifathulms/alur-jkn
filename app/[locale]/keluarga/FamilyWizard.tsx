@@ -14,6 +14,9 @@ import { findRule } from '@/lib/rules/loader';
 import { scenarioShareText } from '@/lib/copy/shareText';
 import { QuestionCard } from '@/components/question/QuestionCard';
 import { ShareCard } from '@/components/share/ShareCard';
+import { StationFragment } from '@/components/pathway/StationFragment';
+import { computeFragment } from '@/lib/network/fragment';
+import type { Network } from '@/lib/network/schema';
 
 const PROMPTS: Record<keyof AdministrativeAnswers, string> = {
   kecelakaanLaluLintas: 'Apakah ini berkaitan dengan kecelakaan lalu lintas?',
@@ -25,7 +28,7 @@ const PROMPTS: Record<keyof AdministrativeAnswers, string> = {
 };
 
 /** Answers live only in this component's state — nothing stored, invariant 4. */
-export function FamilyWizard() {
+export function FamilyWizard({ network }: { network: Network }) {
   const [answers, setAnswers] = useState<AdministrativeAnswers>(emptyAnswers);
   const [history, setHistory] = useState<Array<keyof AdministrativeAnswers>>([]);
 
@@ -48,7 +51,8 @@ export function FamilyWizard() {
   if (question) {
     return (
       <div className="max-w-xl mx-auto px-4 py-10 sm:px-6">
-        <p className="text-body-lg mb-6">{PROMPTS[question]}</p>
+        <StationFragment fragment={computeFragment(network, null)} />
+        <p className="text-body-lg mb-6 mt-4">{PROMPTS[question]}</p>
         <div className="flex gap-4">
           <button
             type="button"
@@ -81,9 +85,11 @@ export function FamilyWizard() {
   const scenarioId = resolveScenarioId(answers);
   const scenario = scenarioId ? getScenario(scenarioId) : undefined;
   const citedRules = scenario?.ruleRefs.map((ref) => findRule(rulePacks, ref.packId, ref.ruleId)) ?? [];
+  const fragment = computeFragment(network, scenario?.position ?? null);
 
   return (
     <div className="max-w-xl mx-auto px-4 py-10 sm:px-6 space-y-6">
+      <StationFragment fragment={fragment} />
       {scenario ? (
         <>
           <h1 className="text-heading font-medium">{scenario.title}</h1>

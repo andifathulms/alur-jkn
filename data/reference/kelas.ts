@@ -22,6 +22,7 @@ export const kelas: Reference = {
   slug: 'kelas',
   title: 'Kelas rawat inap',
   summary: 'Hak kelas rawat inap ditentukan oleh segmen kepesertaan, dan peserta dapat memilih naik kelas dengan membayar selisih.',
+  position: { type: 'station', stationId: 'naikKelas' },
   entries: [
     {
       term: 'Hak kelas rawat inap',

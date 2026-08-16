@@ -10,6 +10,7 @@ export const tanpaRujukan: Scenario = {
     type: 'depends',
     question: 'Apakah kondisi ini masuk kriteria gawat darurat, atau perlu rujukan dari FKTP dulu?',
   },
+  position: { type: 'station', stationId: 'rumahSakit' },
   ruleRefs: [{ packId: 'perpres-82-2018', ruleId: 'rujukan-berjenjang' }],
   nextAction:
     'Tanyakan ke petugas apakah kondisi ini termasuk gawat darurat. Jika bukan, Puskesmas atau klinik terdekat dapat menerbitkan surat rujukan untuk melanjutkan ke rumah sakit melalui jalur JKN.',

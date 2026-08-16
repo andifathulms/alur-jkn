@@ -14,6 +14,7 @@ export const inaCbg: Reference = {
   title: 'INA-CBG: bagaimana JKN membayar rumah sakit',
   summary:
     'JKN membayar rumah sakit per kelompok kasus dalam satu paket, bukan per tindakan — dan itu menentukan metode apa yang bisa ditawarkan rumah sakit kepada Anda.',
+  position: { type: 'station', stationId: 'rumahSakit' },
   sections: [
     {
       heading: 'Paket per kelompok kasus, bukan per tindakan',

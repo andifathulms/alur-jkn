@@ -1,9 +1,12 @@
 import { notFound } from 'next/navigation';
 import { ReferenceEntryList } from '@/components/reference/ReferenceEntryList';
 import { ShareCard } from '@/components/share/ShareCard';
+import { StationFragment } from '@/components/pathway/StationFragment';
 import { getReference } from '@/data/reference';
 import { isStale } from '@/lib/rules/schema';
 import { referenceShareText } from '@/lib/copy/shareText';
+import { computeFragment } from '@/lib/network/fragment';
+import { network } from '@/lib/network/definition';
 
 /**
  * The shared body for every entryList reference page (pengecualian, poli,
@@ -19,9 +22,11 @@ export function ReferenceEntryListPage({ slug }: { slug: string }) {
     entry: item,
     stale: isStale(item.citation.verifiedAt, now),
   }));
+  const fragment = computeFragment(network, entry.position);
 
   return (
     <div className="space-y-8">
+      <StationFragment fragment={fragment} />
       <div>
         <h1 className="text-heading font-medium">{entry.title}</h1>
         <p className="text-body-lg mt-3">{entry.summary}</p>

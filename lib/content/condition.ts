@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { RuleRefSchema } from './ruleRef';
+import { PositionSchema } from '@/lib/network/position';
 
 /**
  * v2 content model, type 3 of 3 (PRD.md §5.3, MIGRATION.md step 5) — a
@@ -21,6 +22,8 @@ export const ConditionSchema = z
     slug: z.string().min(1),
     title: z.string().min(1),
     summary: z.string().min(1),
+    /** DESIGN.md v3 §5.7: the route diagram sits above the five sections, generated from this. */
+    position: PositionSchema,
     /** §1 The route — which poli, referral or emergency bypass. */
     route: z.string().min(1),
     /** §2 What determines the method — medical indication, not a coverage rule. */

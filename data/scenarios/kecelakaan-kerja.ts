@@ -15,6 +15,7 @@ export const kecelakaanKerja: Scenario = {
       continuesWith: { type: 'jkn', label: 'JKN' },
     },
   },
+  position: { type: 'station', stationId: 'rumahSakit' },
   ruleRefs: [{ packId: 'perpres-82-2018', ruleId: 'kecelakaan-kerja-koordinasi' }],
   nextAction:
     'Sampaikan ke bagian administrasi tempat kerja atau BPJS Ketenagakerjaan mengenai kejadian ini, untuk proses klaim jaminan kecelakaan kerja. Fasilitas kesehatan akan mengoordinasikan penjaminan dengan JKN bila diperlukan.',

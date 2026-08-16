@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { RuleCitationSchema } from '@/lib/rules/schema';
+import { PositionSchema } from '@/lib/network/position';
 
 export const ReferenceSectionSchema = z
   .object({
@@ -34,6 +35,8 @@ const referenceBaseFields = {
   title: z.string().min(1),
   /** DESIGN.md v2 §4 "entry shape": a one-line plain-Indonesian definition — here, of the whole section. */
   summary: z.string().min(1),
+  /** DESIGN.md v3 §5/§7: where this section sits on the network — null if it doesn't map to one place. */
+  position: PositionSchema,
 };
 
 /**

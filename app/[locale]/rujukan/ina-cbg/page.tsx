@@ -2,9 +2,12 @@ import { notFound } from 'next/navigation';
 import { InaCbgDiagram } from '@/components/reference/InaCbgDiagram';
 import { ReferenceCitationList } from '@/components/reference/ReferenceCitationList';
 import { ShareCard } from '@/components/share/ShareCard';
+import { StationFragment } from '@/components/pathway/StationFragment';
 import { getReference } from '@/data/reference';
 import { isStale } from '@/lib/rules/schema';
 import { referenceShareText } from '@/lib/copy/shareText';
+import { computeFragment } from '@/lib/network/fragment';
+import { network } from '@/lib/network/definition';
 
 /**
  * MIGRATION.md step 3 — the spine. "This page is the correction the whole
@@ -23,9 +26,11 @@ export default function InaCbgPage() {
     citation,
     stale: isStale(citation.verifiedAt, now),
   }));
+  const fragment = computeFragment(network, entry.position);
 
   return (
     <div className="max-w-2xl space-y-10">
+      <StationFragment fragment={fragment} />
       <div>
         <h1 className="text-heading font-medium">{entry.title}</h1>
         <p className="text-body-lg mt-3">{entry.summary}</p>

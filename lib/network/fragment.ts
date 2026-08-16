@@ -1,7 +1,7 @@
 import type { Network, LineColorToken, LinePattern } from './schema';
+import type { Position } from './position';
 
-/** Where a reader currently is, for a station fragment — a real network station, an off-network Pasal 52 item, or unknown. */
-export type Position = { type: 'station'; stationId: string } | { type: 'offNetwork'; itemId: string } | null;
+export type { Position } from './position';
 
 export interface FragmentStation {
   id: string;

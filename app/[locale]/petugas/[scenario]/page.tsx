@@ -5,11 +5,14 @@ import { QuestionCard } from '@/components/question/QuestionCard';
 import { OutcomeDisplay } from '@/components/state/OutcomeDisplay';
 import { RuleCitationList } from '@/components/rules/RuleCitationList';
 import { ShareCard } from '@/components/share/ShareCard';
+import { StationFragment } from '@/components/pathway/StationFragment';
 import { scenarios } from '@/data/scenarios';
 import { rulePacks } from '@/data/rules';
 import { findRule } from '@/lib/rules/loader';
 import { isStale } from '@/lib/rules/schema';
 import { scenarioShareText } from '@/lib/copy/shareText';
+import { computeFragment } from '@/lib/network/fragment';
+import { network } from '@/lib/network/definition';
 
 export function generateStaticParams() {
   return scenarios.map((s) => ({ scenario: s.id }));
@@ -29,6 +32,7 @@ export default function ScenarioDetailPage({ params }: { params: { scenario: str
     scenario,
     citedRules.map((c) => c.rule),
   );
+  const fragment = computeFragment(network, scenario.position);
 
   return (
     <div>
@@ -37,6 +41,10 @@ export default function ScenarioDetailPage({ params }: { params: { scenario: str
         <Link href="/id/petugas" className="no-print text-caption underline underline-offset-4">
           ← Daftar skenario
         </Link>
+
+        <div className="mt-4">
+          <StationFragment fragment={fragment} />
+        </div>
 
         {/* DESIGN.md §5: landscape-friendly, readable across a desk. Two columns at md+
             keep the answer and the question visible together without scrolling. */}

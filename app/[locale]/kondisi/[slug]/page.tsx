@@ -5,6 +5,8 @@ import { conditions, getCondition } from '@/data/conditions';
 import { rulePacks } from '@/data/rules';
 import { findRule } from '@/lib/rules/loader';
 import { isStale } from '@/lib/rules/schema';
+import { computeFragment } from '@/lib/network/fragment';
+import { network } from '@/lib/network/definition';
 
 export function generateStaticParams() {
   return conditions.map((c) => ({ slug: c.slug }));
@@ -19,11 +21,12 @@ export default function ConditionPage({ params }: { params: { slug: string } }) 
     const rule = findRule(rulePacks, ref.packId, ref.ruleId);
     return { rule, stale: isStale(rule.citation.verifiedAt, now) };
   });
+  const fragment = computeFragment(network, condition.position);
 
   return (
     <div>
       <EmergencyBanner />
-      <ConditionTemplate condition={condition} citedRules={citedRules} />
+      <ConditionTemplate condition={condition} citedRules={citedRules} fragment={fragment} />
     </div>
   );
 }
