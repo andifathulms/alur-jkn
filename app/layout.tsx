@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import { atkinson, plexMono } from './fonts';
+import { APP_NAME } from '@/lib/copy/strings';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Alur JKN',
+  title: APP_NAME,
   description:
     'Menjelaskan alur rujukan dan penjaminan JKN, dan menghasilkan pertanyaan yang tepat untuk ditanyakan ke petugas.',
 };

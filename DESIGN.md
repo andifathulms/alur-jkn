@@ -34,10 +34,12 @@ Green-and-red for covered-and-not is the obvious approach and it is wrong. Red i
 --payer-1  #2F6B5E    deep teal
 --payer-2  #4A5C8A    slate blue
 --payer-3  #8A6A3B    bronze
---self     #6E7A72    grey-green — out of pocket
+--self     #5E6861    grey-green — out of pocket
 
---care     #C2542B    burnt orange — emergency route only
+--care     #80371C    burnt orange — emergency route only
 ```
+
+`--self` and `--care` are darkened from earlier drafts of this palette — §17's contrast script measured the original `#6E7A72`/`#C2542B` at 4.11:1 and 4.19:1 against `--paper`, short of the 4.5:1/7:1 this section claims. Same hue, same relationship to the other tokens, corrected lightness.
 
 Payer colours are deliberately unlike any Indonesian institution's brand. The product must not read as an official channel.
 

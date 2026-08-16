@@ -49,20 +49,22 @@ pnpm typecheck
 pnpm lint
 ```
 
-`contrast:check`, `tokens:check`, `map:check`, and `offline:check` are real, un-softened checks that
-currently fail against the codebase — they report genuine gaps predating `DESIGN.md` v3 (colour tokens
-below their claimed ratio; hand-written arbitrary values; no station fragment yet; no service worker
-yet) rather than being weakened to pass. They run in CI (see Deployment) but are not yet blocking,
-specifically so that surfacing a real problem doesn't halt unrelated work — each becomes a blocking gate
-once its corresponding fix lands, per `DESIGN.md`'s build order. `strings:check` currently fails for one
-reason (`app/layout.tsx`'s metadata title re-types `APP_NAME` instead of importing it).
+`contrast:check`, `strings:check`, and `map:check` are real, un-softened checks and now pass:
+colour tokens were corrected to their claimed ratio (`--self`/`--care` darkened, `DESIGN.md` §2;
+`text-ink/60` retired in favour of `text-ink/70`, the lightest opacity that clears AA), every coverage
+route carries a station fragment (`DESIGN.md`'s build order step 4), and `app/layout.tsx`'s metadata
+title now imports `APP_NAME` instead of re-typing it. `tokens:check` and `offline:check` still fail
+against genuine gaps predating `DESIGN.md` v3 (hand-written arbitrary target values and raw hex in the
+legacy pathway/INA-CBG diagrams; no service worker yet) rather than being weakened to pass — each
+becomes a blocking gate once its corresponding fix lands, per `DESIGN.md`'s build order (step 7 for
+`tokens:check`, step 9 for `offline:check`).
 
 The four original gating checks (`content:validate`, `copy:check`, `bundle:check`, plus `typecheck` and
 `lint`) run in `build` and CI and are blocking. **None may be skipped, weakened, or flagged around, and
-they outrank every check added since.** The five `DESIGN.md` §17 checks above run in CI too; `contrast:check`,
-`tokens:check`, `map:check`, and `offline:check` are informational there until their corresponding fix
-lands (see above) — informational is a pipeline-wiring decision, not a licence to soften what the check
-itself asserts.
+they outrank every check added since.** The five `DESIGN.md` §17 checks above run in CI too;
+`contrast:check`, `strings:check`, and `map:check` are blocking now that they pass; `tokens:check` and
+`offline:check` remain informational there until their corresponding fix lands (see above) —
+informational is a pipeline-wiring decision, not a licence to soften what the check itself asserts.
 
 ## Layout
 

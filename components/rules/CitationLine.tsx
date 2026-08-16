@@ -14,7 +14,7 @@ export function CitationLine({ citation, stale }: { citation: RuleCitation; stal
       <p className="font-mono text-caption text-ink/80">
         {citation.instrument}, {citation.article}
       </p>
-      <p className="text-caption text-ink/60 mt-1">
+      <p className="text-caption text-ink/70 mt-1">
         Diverifikasi {citation.verifiedAt} ·{' '}
         <a href={citation.sourceUrl} className="underline" target="_blank" rel="noreferrer">
           sumber

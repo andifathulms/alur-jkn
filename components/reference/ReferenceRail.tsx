@@ -56,7 +56,7 @@ export function ReferenceRail({ items }: { items: RailItem[] }) {
                 </li>
               );
             })}
-            {filtered.length === 0 && <li className="text-caption text-ink/60 px-3 py-2">Tidak ditemukan.</li>}
+            {filtered.length === 0 && <li className="text-caption text-ink/70 px-3 py-2">Tidak ditemukan.</li>}
           </ul>
         </div>
       </details>

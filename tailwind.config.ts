@@ -14,8 +14,8 @@ const config: Config = {
         'payer-1': '#2F6B5E',
         'payer-2': '#4A5C8A',
         'payer-3': '#8A6A3B',
-        self: '#6E7A72',
-        care: '#C2542B',
+        self: '#5E6861',
+        care: '#80371C',
       },
       fontFamily: {
         sans: ['var(--font-atkinson)'],

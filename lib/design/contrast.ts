@@ -36,7 +36,7 @@ export function contrastRatio(hexA: string, hexB: string): number {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
-/** Alpha-composite a foreground colour over a background — for e.g. `text-ink/60` on `bg-paper`. */
+/** Alpha-composite a foreground colour over a background — for e.g. `text-ink/70` on `bg-paper`. */
 export function alphaComposite(fgHex: string, bgHex: string, alpha: number): string {
   const fg = hexToRgb(fgHex);
   const bg = hexToRgb(bgHex);

@@ -30,9 +30,9 @@ export function SearchBox({ items }: { items: SearchItem[] }) {
 
       <div className="mt-6">
         {query.trim() === '' ? (
-          <p className="text-body text-ink/60">{SEARCH_LABELS.prompt}</p>
+          <p className="text-body text-ink/70">{SEARCH_LABELS.prompt}</p>
         ) : results.length === 0 ? (
-          <p className="text-body text-ink/60">{SEARCH_LABELS.noResults}</p>
+          <p className="text-body text-ink/70">{SEARCH_LABELS.noResults}</p>
         ) : (
           <ul className="space-y-3">
             {results.map((item) => (
@@ -52,7 +52,7 @@ function SearchResultRow({ item }: { item: SearchItem }) {
         href={item.href}
         className="block min-h-[48px] border border-rule rounded-md p-3 hover:bg-ink/5"
       >
-        <span className="text-caption font-bold uppercase tracking-wide text-ink/60">
+        <span className="text-caption font-bold uppercase tracking-wide text-ink/70">
           {CONTENT_TYPE_LABELS[item.contentType]}
         </span>
         <p className="text-body-lg mt-1">{item.title}</p>
