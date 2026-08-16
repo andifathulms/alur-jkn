@@ -16,6 +16,11 @@
     "content:validate": "tsx scripts/validate-content.ts",
     "copy:check": "tsx scripts/copy-check.ts",
     "bundle:check": "tsx scripts/bundle-check.ts",
+    "contrast:check": "tsx scripts/contrast-check.ts",
+    "strings:check": "tsx scripts/strings-check.ts",
+    "tokens:check": "tsx scripts/tokens-check.ts",
+    "map:check": "tsx scripts/map-coverage-check.ts",
+    "offline:check": "tsx scripts/offline-check.ts",
     "typecheck": "tsc --noEmit",
     "lint": "next lint"
   },

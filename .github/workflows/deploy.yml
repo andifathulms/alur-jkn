@@ -32,6 +32,22 @@ jobs:
       - run: pnpm test:safety
       - run: pnpm test:a11y
       - run: pnpm bundle:check
+      # DESIGN.md §17's five new checks. Real and un-softened — each currently
+      # fails against genuine, pre-existing gaps (see CLAUDE.md's Commands
+      # section for what each reports). continue-on-error keeps them visible
+      # in every run without blocking deploy on work outside the current
+      # change's scope; each moves out of continue-on-error and up next to
+      # the blocking checks above once its corresponding fix lands.
+      - run: pnpm contrast:check
+        continue-on-error: true
+      - run: pnpm strings:check
+        continue-on-error: true
+      - run: pnpm tokens:check
+        continue-on-error: true
+      - run: pnpm map:check
+        continue-on-error: true
+      - run: pnpm offline:check
+        continue-on-error: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out

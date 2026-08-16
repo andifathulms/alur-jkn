@@ -22,7 +22,8 @@ Read `PRD.md` before starting any task, and **`DESIGN.md` before writing any UI 
 - Zod for rule and content schema validation
 - Vitest, plus axe for automated a11y
 - pnpm
-- **No component library. No analytics library. No error reporting. No third-party script of any kind.**
+- **No component library. No analytics library. No error reporting.** No third-party runtime script of
+  any kind; one build-time exception, the service-worker generator, per `DESIGN.md` §18.
 - Fonts via `next/font`, self-hosted and subset.
 
 ## Commands
@@ -34,15 +35,34 @@ pnpm preview                # serve ./out under the production basePath
 pnpm test                   # vitest watch
 pnpm test:run               # vitest once — before every commit
 pnpm test:safety            # emergency-first, no-verdict, Pasal 52 rule, no diagnostic fields
-pnpm test:a11y              # contrast, target size, type floor, zoom, colour-only encoding
+pnpm test:a11y              # target size, type floor, zoom, colour-only encoding, reduced-motion
+                             # (behavioural, on the CSS mechanism — see DESIGN.md §17)
 pnpm content:validate       # citations, verifiedAt, condition-page completeness
 pnpm copy:check             # banned-phrase scan across all copy and content
 pnpm bundle:check           # size budget
+pnpm contrast:check         # DESIGN.md §17 — computed AA/AAA ratio per claimed token pair
+pnpm strings:check          # DESIGN.md §17 — no user-visible string defined twice
+pnpm tokens:check           # DESIGN.md §17 — no arbitrary target value, no raw hex, where a token exists
+pnpm map:check              # DESIGN.md §17 — every coverage route carries a station fragment
+pnpm offline:check          # DESIGN.md §17 — service worker registers, second load survives offline
 pnpm typecheck
 pnpm lint
 ```
 
-All four gating checks run in `build` and CI. **None may be skipped, weakened, or flagged around.**
+`contrast:check`, `tokens:check`, `map:check`, and `offline:check` are real, un-softened checks that
+currently fail against the codebase — they report genuine gaps predating `DESIGN.md` v3 (colour tokens
+below their claimed ratio; hand-written arbitrary values; no station fragment yet; no service worker
+yet) rather than being weakened to pass. They run in CI (see Deployment) but are not yet blocking,
+specifically so that surfacing a real problem doesn't halt unrelated work — each becomes a blocking gate
+once its corresponding fix lands, per `DESIGN.md`'s build order. `strings:check` currently fails for one
+reason (`app/layout.tsx`'s metadata title re-types `APP_NAME` instead of importing it).
+
+The four original gating checks (`content:validate`, `copy:check`, `bundle:check`, plus `typecheck` and
+`lint`) run in `build` and CI and are blocking. **None may be skipped, weakened, or flagged around, and
+they outrank every check added since.** The five `DESIGN.md` §17 checks above run in CI too; `contrast:check`,
+`tokens:check`, `map:check`, and `offline:check` are informational there until their corresponding fix
+lands (see above) — informational is a pipeline-wiring decision, not a licence to soften what the check
+itself asserts.
 
 ## Layout
 
