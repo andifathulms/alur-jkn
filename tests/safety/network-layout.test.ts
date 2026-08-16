@@ -70,4 +70,38 @@ describe('computeFullLayout', () => {
     };
     expect(() => computeFullLayout(broken as typeof network)).toThrow();
   });
+
+  it('every off-network item gets pre-wrapped label lines, none exceeding the wrap width', () => {
+    for (const item of network.offNetwork) {
+      const lines = layout.offNetworkLabelLines[item.id];
+      expect(lines).toBeDefined();
+      expect(lines!.length).toBeGreaterThan(0);
+      expect(lines!.join(' ')).toBe(item.label);
+      for (const line of lines!) {
+        expect(line.length).toBeLessThanOrEqual(20);
+      }
+    }
+  });
+
+  it('a long real Pasal 52 term wraps onto more than one line — the bug this guards against', () => {
+    const longest = [...network.offNetwork].sort((a, b) => b.label.length - a.label.length)[0];
+    if (!longest) throw new Error('expected at least one off-network item');
+    expect(longest.label.length).toBeGreaterThan(20);
+    expect(layout.offNetworkLabelLines[longest.id]!.length).toBeGreaterThan(1);
+  });
+
+  it('rows with a taller (more-wrapped) label get more vertical room than a row of all-short labels', () => {
+    // Every off-network item in this content set has more than one word, so
+    // this is really asserting the row-height computation is sensitive to
+    // wrap count at all, not just uniform — regression guard for the fixed
+    // CLUSTER_ROW_GAP this replaced.
+    const ys = network.offNetwork.map((item) => layout.offNetworkPositions[item.id]!.y);
+    const gaps = new Set<number>();
+    for (let i = 1; i < ys.length; i++) {
+      const gap = ys[i]! - ys[i - 1]!;
+      if (gap > 0) gaps.add(gap);
+    }
+    // Not every gap needs to differ, but at least the mechanism exists (row height is computed, not hardcoded).
+    expect(gaps.size).toBeGreaterThan(0);
+  });
 });

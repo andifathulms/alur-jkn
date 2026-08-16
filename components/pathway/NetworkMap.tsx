@@ -129,6 +129,7 @@ export function NetworkMap({
 
         {network.offNetwork.map((item) => {
           const point = layout.offNetworkPositions[item.id];
+          const lines = layout.offNetworkLabelLines[item.id] ?? [item.label];
           if (!point) return null;
           return (
             <g key={item.id} opacity={highlight ? DIMMED_OPACITY : 1}>
@@ -142,7 +143,11 @@ export function NetworkMap({
                 strokeDasharray="2 4"
               />
               <text x={point.x} y={point.y + 20} textAnchor="middle" className="fill-ink" fontSize={11}>
-                {item.label}
+                {lines.map((line, lineIndex) => (
+                  <tspan key={line} x={point.x} dy={lineIndex === 0 ? 0 : 13}>
+                    {line}
+                  </tspan>
+                ))}
               </text>
             </g>
           );
