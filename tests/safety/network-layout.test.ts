@@ -104,4 +104,47 @@ describe('computeFullLayout', () => {
     // Not every gap needs to differ, but at least the mechanism exists (row height is computed, not hardcoded).
     expect(gaps.size).toBeGreaterThan(0);
   });
+
+  it('every station gets pre-wrapped label and sublabel lines', () => {
+    for (const station of network.stations) {
+      const labelLines = layout.stationLabelLines[station.id];
+      expect(labelLines).toBeDefined();
+      expect(labelLines!.join(' ')).toBe(station.label);
+      if (station.sublabel) {
+        expect(layout.stationSublabelLines[station.id]!.join(' ')).toBe(station.sublabel);
+      }
+    }
+  });
+
+  it('a long self-branch label wraps onto more than one line — the bug this guards against (label clipped past the left edge)', () => {
+    const selfBranch = network.lines.find((l) => l.kind === 'selfBranch');
+    if (selfBranch?.kind !== 'selfBranch') throw new Error('expected a selfBranch line');
+    const longest = [...selfBranch.stationIds].sort(
+      (a, b) => (network.stations.find((s) => s.id === b)?.label.length ?? 0) - (network.stations.find((s) => s.id === a)?.label.length ?? 0),
+    )[0]!;
+    expect(layout.stationLabelLines[longest]!.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('no self-branch station sits left of the viewBox — the regression this guards against', () => {
+    const selfBranch = network.lines.find((l) => l.kind === 'selfBranch');
+    if (selfBranch?.kind !== 'selfBranch') throw new Error('expected a selfBranch line');
+    for (const id of selfBranch.stationIds) {
+      const point = layout.stationPositions[id]!;
+      expect(point.x).toBeGreaterThan(0);
+    }
+  });
+
+  it('the viewBox is wide enough to contain every self-branch station label without clipping', () => {
+    const selfBranch = network.lines.find((l) => l.kind === 'selfBranch');
+    if (selfBranch?.kind !== 'selfBranch') throw new Error('expected a selfBranch line');
+    for (const id of selfBranch.stationIds) {
+      const point = layout.stationPositions[id]!;
+      const longestLine = Math.max(0, ...(layout.stationLabelLines[id] ?? []).map((l) => l.length));
+      // Side-anchored labels start just right of the circle and read left-to-right — a rough
+      // character-width estimate (matching lib/network/layout.ts's own APPROX_CHAR_WIDTH) is
+      // enough to catch a viewBox that's too narrow for the actual wrapped text.
+      const estimatedRightEdge = point.x + 9 + 10 + longestLine * 7;
+      expect(estimatedRightEdge).toBeLessThanOrEqual(layout.viewBoxWidth);
+    }
+  });
 });

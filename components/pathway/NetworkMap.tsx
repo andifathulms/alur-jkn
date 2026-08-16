@@ -8,6 +8,8 @@ const INTERCHANGE_RADIUS = 14;
 const STATION_RADIUS = 9;
 const OFF_NETWORK_RADIUS = 6;
 const DIMMED_OPACITY = 0.25;
+const LABEL_LINE_HEIGHT = 13;
+const SUBLABEL_LINE_HEIGHT = 12;
 
 /**
  * DESIGN.md v3 §5, "The home page is the network": the full map, every
@@ -31,7 +33,9 @@ export function NetworkMap({
   layout: FullLayout;
   highlight?: ConditionHighlight;
 }) {
-  const interchangeId = network.lines.find((l) => l.kind === 'selfBranch')?.branchesFromStationId;
+  const selfBranchLine = network.lines.find((l) => l.kind === 'selfBranch');
+  const interchangeId = selfBranchLine?.branchesFromStationId;
+  const selfBranchStationIds = new Set(selfBranchLine?.stationIds ?? []);
   const lineOpacity = (lineId: string) => (!highlight || highlight.lineIds.has(lineId) ? 1 : DIMMED_OPACITY);
   const stationOpacity = (stationId: string) =>
     !highlight || highlight.stationIds.has(stationId) ? 1 : DIMMED_OPACITY;
@@ -105,22 +109,50 @@ export function NetworkMap({
           const point = layout.stationPositions[station.id];
           if (!point) return null;
           const isInterchange = station.id === interchangeId;
+          const isSelfBranchStation = selfBranchStationIds.has(station.id);
+          const labelLines = layout.stationLabelLines[station.id] ?? [station.label];
+          const sublabelLines = layout.stationSublabelLines[station.id] ?? [];
+          const radius = isInterchange ? INTERCHANGE_RADIUS : STATION_RADIUS;
+
+          // The self-branch runs at 45° — a label centred directly above its
+          // station (fine for the horizontal referral line) sits right on
+          // top of the diagonal line connecting it to its neighbours. Those
+          // stations get their label/sublabel to the side instead, clear of
+          // the line in both directions.
+          const labelX = isSelfBranchStation ? point.x + radius + 10 : point.x;
+          const labelAnchor = isSelfBranchStation ? 'start' : 'middle';
+          const labelBlockHeight = (labelLines.length - 1) * LABEL_LINE_HEIGHT;
+          const labelTopY = isSelfBranchStation
+            ? point.y - labelBlockHeight / 2 + 4
+            : point.y - (isInterchange ? 22 : 16) - labelBlockHeight;
+          const sublabelTopY = isSelfBranchStation
+            ? labelTopY + labelBlockHeight + LABEL_LINE_HEIGHT + 2
+            : point.y + (isInterchange ? 30 : 22);
+
           return (
             <g key={station.id} opacity={stationOpacity(station.id)}>
               <circle
                 cx={point.x}
                 cy={point.y}
-                r={isInterchange ? INTERCHANGE_RADIUS : STATION_RADIUS}
+                r={radius}
                 fill="var(--color-paper)"
                 stroke="var(--color-ink)"
                 strokeWidth={isInterchange ? 4 : 3}
               />
-              <text x={point.x} y={point.y - (isInterchange ? 22 : 16)} textAnchor="middle" className="fill-ink font-medium" fontSize={13}>
-                {station.label}
+              <text x={labelX} y={labelTopY} textAnchor={labelAnchor} className="fill-ink font-medium" fontSize={13}>
+                {labelLines.map((line, lineIndex) => (
+                  <tspan key={line} x={labelX} dy={lineIndex === 0 ? 0 : LABEL_LINE_HEIGHT}>
+                    {line}
+                  </tspan>
+                ))}
               </text>
-              {station.sublabel && (
-                <text x={point.x} y={point.y + (isInterchange ? 30 : 22)} textAnchor="middle" className="fill-ink/70" fontSize={11}>
-                  {station.sublabel}
+              {sublabelLines.length > 0 && (
+                <text x={labelX} y={sublabelTopY} textAnchor={labelAnchor} className="fill-ink/70" fontSize={11}>
+                  {sublabelLines.map((line, lineIndex) => (
+                    <tspan key={line} x={labelX} dy={lineIndex === 0 ? 0 : SUBLABEL_LINE_HEIGHT}>
+                      {line}
+                    </tspan>
+                  ))}
                 </text>
               )}
             </g>

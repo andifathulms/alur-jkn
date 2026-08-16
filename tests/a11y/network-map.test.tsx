@@ -109,4 +109,42 @@ describe('NetworkMap', () => {
       expect(group?.getAttribute('opacity')).toBe('0.25');
     });
   });
+
+  describe('self-branch station labels sit to the side, not centred above the diagonal line', () => {
+    it('a self-branch station\'s label text-anchor is "start" (right of its circle), not "middle"', () => {
+      const selfBranch = network.lines.find((l) => l.kind === 'selfBranch');
+      if (selfBranch?.kind !== 'selfBranch') throw new Error('expected a selfBranch line');
+      const [firstStopId] = selfBranch.stationIds;
+      if (!firstStopId) throw new Error('expected at least one self-branch stop');
+      const point = layout.stationPositions[firstStopId]!;
+
+      const { container } = render(<NetworkMap network={network} layout={layout} />);
+      const labelText = Array.from(container.querySelectorAll('svg text')).find(
+        (t) => t.getAttribute('text-anchor') === 'start' && Number(t.getAttribute('x')) > point.x,
+      );
+      expect(labelText).toBeDefined();
+    });
+
+    it('a referral-line station (e.g. FKTP) keeps its label centred above the circle', () => {
+      const point = layout.stationPositions.fktp!;
+      const { container } = render(<NetworkMap network={network} layout={layout} />);
+      const labelText = Array.from(container.querySelectorAll('svg text')).find(
+        (t) => t.getAttribute('text-anchor') === 'middle' && t.textContent?.includes('FKTP'),
+      );
+      expect(labelText?.querySelector('tspan')?.getAttribute('x')).toBe(String(point.x));
+    });
+
+    it('no self-branch station\'s side label starts left of its own circle (would defeat the point of moving it)', () => {
+      const selfBranch = network.lines.find((l) => l.kind === 'selfBranch');
+      if (selfBranch?.kind !== 'selfBranch') throw new Error('expected a selfBranch line');
+      const { container } = render(<NetworkMap network={network} layout={layout} />);
+      for (const stopId of selfBranch.stationIds) {
+        const point = layout.stationPositions[stopId]!;
+        const labelText = Array.from(container.querySelectorAll('svg text')).find(
+          (t) => t.getAttribute('text-anchor') === 'start' && t.textContent && layout.stationLabelLines[stopId]?.some((l) => t.textContent!.includes(l)),
+        );
+        expect(Number(labelText?.getAttribute('x'))).toBeGreaterThan(point.x);
+      }
+    });
+  });
 });

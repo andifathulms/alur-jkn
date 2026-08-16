@@ -11,6 +11,9 @@ export interface FullLayout {
   offNetworkPositions: Record<string, Point>;
   /** DESIGN.md v3 §5's off-network cluster carries real Pasal 52 terms, some well over a column's width — pre-wrapped here so NetworkMap only ever renders fixed-width `<tspan>` lines, never a raw string that could overflow into its neighbour. */
   offNetworkLabelLines: Record<string, string[]>;
+  /** Every station's own label/sublabel, pre-wrapped the same way — the self-branch runs three stations close together diagonally, and an un-wrapped label like "Alat kesehatan di atas batas" both overlapped the branch line and clipped past the left edge of the viewBox. */
+  stationLabelLines: Record<string, string[]>;
+  stationSublabelLines: Record<string, string[]>;
   viewBoxWidth: number;
   viewBoxHeight: number;
 }
@@ -19,9 +22,16 @@ const REFERRAL_MARGIN_X = 60;
 const REFERRAL_GAP_X = 180;
 const REFERRAL_LINE_Y = 80;
 
-const SELF_BRANCH_X_STEP = 55;
-const SELF_BRANCH_Y_STEP = 55;
+// Equal X/Y steps keep the branch at DESIGN.md §5's "45° angles only." Large
+// enough that a two-line label above one station and a two-line sublabel
+// below the next don't collide along the diagonal.
+const SELF_BRANCH_STEP = 85;
 const SELF_BRANCH_Y_START_OFFSET = 90;
+
+const STATION_LABEL_MAX_CHARS = 14;
+const STATION_LABEL_LINE_HEIGHT = 13;
+const STATION_SUBLABEL_MAX_CHARS = 16;
+const STATION_SUBLABEL_LINE_HEIGHT = 12;
 
 const CLUSTER_COL_GAP = 150;
 const CLUSTER_ROW_BASE_GAP = 46;
@@ -30,6 +40,22 @@ const CLUSTER_LABEL_MAX_CHARS = 20;
 const CLUSTER_TOP_MARGIN = 110;
 
 const VIEW_MARGIN = 50;
+
+// Matches components/pathway/NetworkMap.tsx's STATION_RADIUS and its
+// side-label horizontal gap — needed here only to size the viewBox
+// correctly around the self-branch's start-anchored labels.
+const STATION_RADIUS = 9;
+const SIDE_LABEL_GAP = 10;
+
+// A generous per-character width estimate (Atkinson Hyperlegible, both the
+// 13px label and 11px sublabel sizes) used only to keep centred text from
+// clipping the viewBox edge — approximate on purpose, padding errs wide.
+const APPROX_CHAR_WIDTH = 7;
+
+function widthOf(lines: string[]): number {
+  const longest = Math.max(0, ...lines.map((l) => l.length));
+  return longest * APPROX_CHAR_WIDTH;
+}
 
 /**
  * DESIGN.md v3 §5, "The home page is the network": "The full map, at full
@@ -50,6 +76,12 @@ export function computeFullLayout(network: Network): FullLayout {
   }
 
   const stationPositions: Record<string, Point> = {};
+  const stationLabelLines: Record<string, string[]> = {};
+  const stationSublabelLines: Record<string, string[]> = {};
+  for (const station of network.stations) {
+    stationLabelLines[station.id] = wrapLabel(station.label, STATION_LABEL_MAX_CHARS);
+    stationSublabelLines[station.id] = station.sublabel ? wrapLabel(station.sublabel, STATION_SUBLABEL_MAX_CHARS) : [];
+  }
 
   referral.stationIds.forEach((id, index) => {
     stationPositions[id] = { x: REFERRAL_MARGIN_X + index * REFERRAL_GAP_X, y: REFERRAL_LINE_Y };
@@ -64,8 +96,8 @@ export function computeFullLayout(network: Network): FullLayout {
 
   selfBranch.stationIds.forEach((id, index) => {
     stationPositions[id] = {
-      x: hub.x - (index + 1) * SELF_BRANCH_X_STEP,
-      y: hub.y + SELF_BRANCH_Y_START_OFFSET + index * SELF_BRANCH_Y_STEP,
+      x: hub.x - (index + 1) * SELF_BRANCH_STEP,
+      y: hub.y + SELF_BRANCH_Y_START_OFFSET + index * SELF_BRANCH_STEP,
     };
   });
 
@@ -73,7 +105,7 @@ export function computeFullLayout(network: Network): FullLayout {
   const clusterStartY =
     Math.max(
       REFERRAL_LINE_Y,
-      hub.y + SELF_BRANCH_Y_START_OFFSET + selfBranch.stationIds.length * SELF_BRANCH_Y_STEP,
+      hub.y + SELF_BRANCH_Y_START_OFFSET + selfBranch.stationIds.length * SELF_BRANCH_STEP,
     ) + CLUSTER_TOP_MARGIN;
 
   const offNetworkLabelLines: Record<string, string[]> = {};
@@ -109,15 +141,50 @@ export function computeFullLayout(network: Network): FullLayout {
     };
   });
 
+  // Self-branch stations render their label/sublabel to the side (start-
+  // anchored, right of the circle — see NetworkMap.tsx), since the branch's
+  // 45° line runs through the space directly above/below each station.
+  // Every other station keeps centred text, extending on both sides of its
+  // point. Either way, a station near the left edge with a wide label
+  // clipped the viewBox before this accounted for label width rather than
+  // just the point itself — shift everything right if it would still clip.
+  const selfBranchStationIdSet = new Set(selfBranch.stationIds);
+  let minReachX = Infinity;
+  let maxReachX = -Infinity;
+  for (const [id, point] of Object.entries(stationPositions)) {
+    const labelWidth = widthOf(stationLabelLines[id] ?? []);
+    const sublabelWidth = widthOf(stationSublabelLines[id] ?? []);
+    if (selfBranchStationIdSet.has(id)) {
+      minReachX = Math.min(minReachX, point.x - STATION_RADIUS);
+      maxReachX = Math.max(maxReachX, point.x + STATION_RADIUS + SIDE_LABEL_GAP + Math.max(labelWidth, sublabelWidth));
+    } else {
+      const half = Math.max(labelWidth, sublabelWidth) / 2;
+      minReachX = Math.min(minReachX, point.x - half);
+      maxReachX = Math.max(maxReachX, point.x + half);
+    }
+  }
+  for (const [id, point] of Object.entries(offNetworkPositions)) {
+    const half = widthOf(offNetworkLabelLines[id] ?? []) / 2;
+    minReachX = Math.min(minReachX, point.x - half);
+    maxReachX = Math.max(maxReachX, point.x + half);
+  }
+
+  const shiftX = minReachX < VIEW_MARGIN ? VIEW_MARGIN - minReachX : 0;
+  if (shiftX > 0) {
+    for (const point of Object.values(stationPositions)) point.x += shiftX;
+    for (const point of Object.values(offNetworkPositions)) point.x += shiftX;
+  }
+
   const allPoints = [...Object.values(stationPositions), ...Object.values(offNetworkPositions)];
-  const maxX = Math.max(...allPoints.map((p) => p.x));
   const maxY = Math.max(cumulativeY, ...allPoints.map((p) => p.y));
 
   return {
     stationPositions,
     offNetworkPositions,
     offNetworkLabelLines,
-    viewBoxWidth: maxX + VIEW_MARGIN,
+    stationLabelLines,
+    stationSublabelLines,
+    viewBoxWidth: maxReachX + shiftX + VIEW_MARGIN,
     viewBoxHeight: maxY + VIEW_MARGIN,
   };
 }
