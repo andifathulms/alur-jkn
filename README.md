@@ -7,17 +7,18 @@ See [`PRD.md`](./PRD.md) for what this is and why, [`DESIGN.md`](./DESIGN.md) fo
 speaks, and [`CLAUDE.md`](./CLAUDE.md) for the invariants that gate every change. This is a v2
 revision of a shipped v1 — see [`MIGRATION.md`](./MIGRATION.md) for the brief that drove it.
 
-**Status:** v2, step 6 of 7 (navigation) done. All three content types exist — scenario, reference,
-and condition — with an outcome state union (`payer` / `excluded` / `depends`) instead of a
-payer-only routing field; `copy:check` enforces that "tidak ditanggung" and its variants appear only
-on a genuine Pasal 52 item with its article rendered inline, and never on a condition page at all.
-`/id/cari` searches across all three content types at once (reference results are deep-linked to the
-specific entry, e.g. `/rujukan/alat-kesehatan#kacamata`, not just the section); staff mode
-(`/id/petugas`) now shows the reference index alongside the scenario list. Only step 7 (share cards
-and print sheets for reference/condition) remains. Content is **draft, not re-verified** — see
-[`UPDATING.md`](./UPDATING.md) before treating any citation as accurate (the `pengecualian` list
-especially — it's explicitly not asserted complete), and the hospital-staff interviews CLAUDE.md's M0
-calls for haven't happened yet.
+**Status:** v2 complete — all seven `MIGRATION.md` steps done. All three content types exist —
+scenario, reference, and condition — with an outcome state union (`payer` / `excluded` / `depends`)
+instead of a payer-only routing field; `copy:check` enforces that "tidak ditanggung" and its variants
+appear only on a genuine Pasal 52 item with its article rendered inline, and never on a condition page
+at all. `/id/cari` searches across all three content types at once (reference results are deep-linked
+to the specific entry, e.g. `/rujukan/alat-kesehatan#kacamata`); staff mode (`/id/petugas`) shows the
+reference index alongside the scenario list; every scenario, reference, and condition page now has a
+share card (print, copy, WhatsApp), matching the pattern the scenario share card set in v1. Content is
+**draft, not re-verified** — see [`UPDATING.md`](./UPDATING.md) before treating any citation as
+accurate (the `pengecualian` list especially — it's explicitly not asserted complete), and the
+hospital-staff interviews CLAUDE.md's M0 calls for haven't happened yet. That re-verification pass —
+not more v2 features — is the real remaining work before this could ship.
 
 ## Commands
 
@@ -44,8 +45,6 @@ pnpm lint
 
 ## What's not yet built
 
-- Share cards and print sheets for the reference/condition types (step 7) — scenarios already have
-  these (`components/share/ShareCard.tsx`).
 - A conditions list/nav entry — reachable via search or direct URL only. MIGRATION.md step 6 named
   search and the reference index specifically for navigation, not a conditions list, so this is a
   deliberate scope reading, not an oversight.
@@ -53,8 +52,9 @@ pnpm lint
   team by frequency of confrontation." MIGRATION.md step 5 asked for the template plus two examples
   only, so the third condition onward is a scope decision for later, not an oversight.
 - English content (`/en/*`) — the `[locale]` route is structurally ready but only `id` has copy.
-- Legal re-verification of everything in `data/rules/` and `data/reference/`, and the hospital-staff
-  interviews M0 calls for.
+- **Legal re-verification of everything in `data/rules/` and `data/reference/`, and the
+  hospital-staff interviews M0 calls for.** This is the actual blocker to shipping, not any
+  remaining feature — see [`UPDATING.md`](./UPDATING.md).
 
 ## Known deviation from CLAUDE.md's layout tree
 
