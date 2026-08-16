@@ -7,15 +7,14 @@ See [`PRD.md`](./PRD.md) for what this is and why, [`DESIGN.md`](./DESIGN.md) fo
 speaks, and [`CLAUDE.md`](./CLAUDE.md) for the invariants that gate every change. This is a v2
 revision of a shipped v1 — see [`MIGRATION.md`](./MIGRATION.md) for the brief that drove it.
 
-**Status:** v2, step 5 of 7 (condition pages) done. All three content types now exist — scenario,
-reference, and condition — with an outcome state union (`payer` / `excluded` / `depends`) instead of
-a payer-only routing field; `copy:check` enforces that "tidak ditanggung" and its variants appear only
+**Status:** v2, step 6 of 7 (navigation) done. All three content types exist — scenario, reference,
+and condition — with an outcome state union (`payer` / `excluded` / `depends`) instead of a
+payer-only routing field; `copy:check` enforces that "tidak ditanggung" and its variants appear only
 on a genuine Pasal 52 item with its article rendered inline, and never on a condition page at all.
-All six `/rujukan/*` reference pages exist, sharing one layout with an index rail and live filter, and
-two example condition pages exist at `/kondisi/*` (operasi-usus-buntu, operasi-katarak) on a shared
-five-section template that always links back to the INA-CBG spine. Cross-type search, the staff-mode
-reference index, and reference/condition share cards (steps 6-7) haven't started — the two condition
-pages are reachable only by direct URL for now. Content is **draft, not re-verified** — see
+`/id/cari` searches across all three content types at once (reference results are deep-linked to the
+specific entry, e.g. `/rujukan/alat-kesehatan#kacamata`, not just the section); staff mode
+(`/id/petugas`) now shows the reference index alongside the scenario list. Only step 7 (share cards
+and print sheets for reference/condition) remains. Content is **draft, not re-verified** — see
 [`UPDATING.md`](./UPDATING.md) before treating any citation as accurate (the `pengecualian` list
 especially — it's explicitly not asserted complete), and the hospital-staff interviews CLAUDE.md's M0
 calls for haven't happened yet.
@@ -33,8 +32,8 @@ pnpm test:safety            # emergency-first, no-verdict, Pasal 52 rule, no dia
 pnpm test:a11y              # structural a11y (jest-axe) + type-floor + colour-only-encoding
 pnpm content:validate       # rule citations, verifiedAt, scenario outcome-branch completeness
 pnpm copy:check             # banned-phrase scan + Pasal 52 rule, across all copy and content
-pnpm bundle:check           # per-route gzipped JS budget (120 KB — DESIGN.md v2 §10 allows up to
-                             # 140 KB once the reference layer ships; not raised yet since it hasn't)
+pnpm bundle:check           # per-route gzipped JS budget — 140 KB, DESIGN.md v2 §10's full
+                             # reference-layer allowance (raised from 120 KB once /cari needed it)
 pnpm typecheck
 pnpm lint
 ```
@@ -45,11 +44,11 @@ pnpm lint
 
 ## What's not yet built
 
-- Cross-content-type search and the staff-mode reference index (step 6) — staff mode still only
-  shows the scenario list; the reference and condition layers are reachable only via direct URL
-  (reference also via nav) but not integrated into staff mode's lookup flow yet.
 - Share cards and print sheets for the reference/condition types (step 7) — scenarios already have
   these (`components/share/ShareCard.tsx`).
+- A conditions list/nav entry — reachable via search or direct URL only. MIGRATION.md step 6 named
+  search and the reference index specifically for navigation, not a conditions list, so this is a
+  deliberate scope reading, not an oversight.
 - More than two condition pages — PRD.md §5.3 targets eight to twelve, "chosen with the hospital
   team by frequency of confrontation." MIGRATION.md step 5 asked for the template plus two examples
   only, so the third condition onward is a scope decision for later, not an oversight.
