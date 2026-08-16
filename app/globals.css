@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* DESIGN.md §7: focus visible on every interactive element, 3px. */
+:focus-visible {
+  outline: 3px solid var(--tw-color-ink, #1f2421);
+  outline-offset: 2px;
+}
+
+/* DESIGN.md §6: prefers-reduced-motion renders both states complete and instant. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
