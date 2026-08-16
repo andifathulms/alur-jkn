@@ -1,10 +1,21 @@
 import type { Fragment } from '@/lib/network/fragment';
 import { strokeDasharrayFor } from '@/lib/network/linePatternStroke';
 import { colorVarFor } from '@/lib/network/lineColorVar';
+import { wrapLabel } from '@/lib/network/wrapLabel';
 
 const SEGMENT_HEIGHT = 64;
 const STATION_GAP = 130;
 const MARGIN_X = 20;
+
+// Matches components/pathway/NetworkMap.tsx's off-network marker: a small
+// dashed circle read as a fuzzy dot rather than a legible "disconnected"
+// ring, and an un-wrapped long Pasal 52 term (e.g. "Pelayanan lain di luar
+// manfaat jaminan kesehatan") overflowed this component's fixed 200-unit
+// viewBox width entirely.
+const OFF_NETWORK_RADIUS = 12;
+const OFF_NETWORK_LABEL_GAP = 14;
+const OFF_NETWORK_LABEL_MAX_CHARS = 20;
+const OFF_NETWORK_LINE_HEIGHT = 15;
 
 /**
  * DESIGN.md v3 §5/§7/§11 — "the local piece of the network, with the
@@ -20,16 +31,31 @@ const MARGIN_X = 20;
  */
 export function StationFragment({ fragment }: { fragment: Fragment }) {
   if (fragment.type === 'offNetwork') {
+    const lines = wrapLabel(fragment.label, OFF_NETWORK_LABEL_MAX_CHARS);
+    const labelTopY = 40 + OFF_NETWORK_RADIUS + OFF_NETWORK_LABEL_GAP;
+    const viewBoxHeight = labelTopY + (lines.length - 1) * OFF_NETWORK_LINE_HEIGHT + 16;
     return (
       <div className="print:break-inside-avoid">
         <svg
-          viewBox="0 0 200 80"
+          viewBox={`0 0 200 ${viewBoxHeight}`}
           aria-hidden="true"
           className="w-full max-w-xs h-auto"
         >
-          <circle cx={100} cy={40} r={7} fill="none" stroke={colorVarFor('self')} strokeWidth={3} strokeDasharray="2 4" />
-          <text x={100} y={64} textAnchor="middle" className="fill-ink font-medium" fontSize={13}>
-            {fragment.label}
+          <circle
+            cx={100}
+            cy={40}
+            r={OFF_NETWORK_RADIUS}
+            fill="none"
+            stroke={colorVarFor('self')}
+            strokeWidth={3}
+            strokeDasharray="3 5"
+          />
+          <text x={100} y={labelTopY} textAnchor="middle" className="fill-ink font-medium" fontSize={13}>
+            {lines.map((line, lineIndex) => (
+              <tspan key={line} x={100} dy={lineIndex === 0 ? 0 : OFF_NETWORK_LINE_HEIGHT}>
+                {line}
+              </tspan>
+            ))}
           </text>
         </svg>
         <p className="text-caption text-ink/70 mt-1">

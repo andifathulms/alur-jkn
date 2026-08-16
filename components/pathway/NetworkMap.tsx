@@ -6,7 +6,12 @@ import { colorVarFor } from '@/lib/network/lineColorVar';
 
 const INTERCHANGE_RADIUS = 14;
 const STATION_RADIUS = 9;
-const OFF_NETWORK_RADIUS = 6;
+// Large enough that the dashed stroke reads as a ring — at the old r=6 it
+// compressed into a fuzzy dot indistinguishable from a loading spinner,
+// which defeats DESIGN.md §5's point ("stations connected to nothing" is
+// the whole argument, and it can't land if the marker itself is illegible).
+const OFF_NETWORK_RADIUS = 12;
+const OFF_NETWORK_LABEL_GAP = 14;
 const DIMMED_OPACITY = 0.25;
 const LABEL_LINE_HEIGHT = 13;
 const SUBLABEL_LINE_HEIGHT = 12;
@@ -119,15 +124,28 @@ export function NetworkMap({
           // top of the diagonal line connecting it to its neighbours. Those
           // stations get their label/sublabel to the side instead, clear of
           // the line in both directions.
+          //
+          // The interchange has three lines converging on it (referral,
+          // care-bypass, self-branch) — there's no side or below-circle
+          // space that's clear of at least one of them, so both its label
+          // and sublabel stack above the circle instead (sublabel on top,
+          // since the label is the more prominent line and sits closer).
+          const labelBlockHeight = (labelLines.length - 1) * LABEL_LINE_HEIGHT;
+          const sublabelBlockHeight = (sublabelLines.length - 1) * SUBLABEL_LINE_HEIGHT;
+
           const labelX = isSelfBranchStation ? point.x + radius + 10 : point.x;
           const labelAnchor = isSelfBranchStation ? 'start' : 'middle';
-          const labelBlockHeight = (labelLines.length - 1) * LABEL_LINE_HEIGHT;
+          const sublabelX = isSelfBranchStation ? point.x + radius + 10 : point.x;
+          const sublabelAnchor = isSelfBranchStation ? 'start' : 'middle';
+
           const labelTopY = isSelfBranchStation
             ? point.y - labelBlockHeight / 2 + 4
             : point.y - (isInterchange ? 22 : 16) - labelBlockHeight;
           const sublabelTopY = isSelfBranchStation
             ? labelTopY + labelBlockHeight + LABEL_LINE_HEIGHT + 2
-            : point.y + (isInterchange ? 30 : 22);
+            : isInterchange
+              ? labelTopY - sublabelBlockHeight - SUBLABEL_LINE_HEIGHT - 6
+              : point.y + 22;
 
           return (
             <g key={station.id} opacity={stationOpacity(station.id)}>
@@ -147,9 +165,9 @@ export function NetworkMap({
                 ))}
               </text>
               {sublabelLines.length > 0 && (
-                <text x={labelX} y={sublabelTopY} textAnchor={labelAnchor} className="fill-ink/70" fontSize={11}>
+                <text x={sublabelX} y={sublabelTopY} textAnchor={sublabelAnchor} className="fill-ink/70" fontSize={11}>
                   {sublabelLines.map((line, lineIndex) => (
-                    <tspan key={line} x={labelX} dy={lineIndex === 0 ? 0 : SUBLABEL_LINE_HEIGHT}>
+                    <tspan key={line} x={sublabelX} dy={lineIndex === 0 ? 0 : SUBLABEL_LINE_HEIGHT}>
                       {line}
                     </tspan>
                   ))}
@@ -172,9 +190,15 @@ export function NetworkMap({
                 fill="none"
                 stroke="var(--color-self)"
                 strokeWidth={3}
-                strokeDasharray="2 4"
+                strokeDasharray="3 5"
               />
-              <text x={point.x} y={point.y + 20} textAnchor="middle" className="fill-ink" fontSize={11}>
+              <text
+                x={point.x}
+                y={point.y + OFF_NETWORK_RADIUS + OFF_NETWORK_LABEL_GAP}
+                textAnchor="middle"
+                className="fill-ink"
+                fontSize={11}
+              >
                 {lines.map((line, lineIndex) => (
                   <tspan key={line} x={point.x} dy={lineIndex === 0 ? 0 : 13}>
                     {line}

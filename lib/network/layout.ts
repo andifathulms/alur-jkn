@@ -34,7 +34,10 @@ const STATION_SUBLABEL_MAX_CHARS = 16;
 const STATION_SUBLABEL_LINE_HEIGHT = 12;
 
 const CLUSTER_COL_GAP = 150;
-const CLUSTER_ROW_BASE_GAP = 46;
+// Matches NetworkMap.tsx's OFF_NETWORK_RADIUS (12) + OFF_NETWORK_LABEL_GAP
+// (14) + roughly a line of text, so a bigger marker doesn't collide with
+// the row below it.
+const CLUSTER_ROW_BASE_GAP = 64;
 const CLUSTER_LINE_HEIGHT = 14;
 const CLUSTER_LABEL_MAX_CHARS = 20;
 const CLUSTER_TOP_MARGIN = 110;
@@ -144,10 +147,13 @@ export function computeFullLayout(network: Network): FullLayout {
   // Self-branch stations render their label/sublabel to the side (start-
   // anchored, right of the circle — see NetworkMap.tsx), since the branch's
   // 45° line runs through the space directly above/below each station.
-  // Every other station keeps centred text, extending on both sides of its
-  // point. Either way, a station near the left edge with a wide label
-  // clipped the viewBox before this accounted for label width rather than
-  // just the point itself — shift everything right if it would still clip.
+  // Every other station (including the interchange, whose label and
+  // sublabel both stack above the circle — three lines converge on it, so
+  // above is the only side clear of all of them) keeps centred text,
+  // extending on both sides of its point. Either way, a station near the
+  // left edge with a wide label clipped the viewBox before this accounted
+  // for label width rather than just the point itself — shift everything
+  // right if it would still clip.
   const selfBranchStationIdSet = new Set(selfBranch.stationIds);
   let minReachX = Infinity;
   let maxReachX = -Infinity;

@@ -147,4 +147,40 @@ describe('NetworkMap', () => {
       }
     });
   });
+
+  describe('the interchange stacks label and sublabel above the circle — three lines converge on it', () => {
+    it('both the interchange label and sublabel render above the referral line\'s y, centred, not overlapping it or the care-bypass line below', () => {
+      const selfBranch = network.lines.find((l) => l.kind === 'selfBranch');
+      if (selfBranch?.kind !== 'selfBranch') throw new Error('expected a selfBranch line');
+      const interchangeId = selfBranch.branchesFromStationId;
+      const point = layout.stationPositions[interchangeId]!;
+      const interchangeStation = network.stations.find((s) => s.id === interchangeId)!;
+
+      const { container } = render(<NetworkMap network={network} layout={layout} />);
+      const texts = Array.from(container.querySelectorAll('svg text'));
+
+      const labelText = texts.find((t) => t.textContent?.includes(interchangeStation.label));
+      expect(labelText?.getAttribute('text-anchor')).toBe('middle');
+      expect(Number(labelText?.getAttribute('y'))).toBeLessThan(point.y);
+
+      if (interchangeStation.sublabel) {
+        const sublabelText = texts.find((t) => t.textContent?.includes(interchangeStation.sublabel!));
+        expect(sublabelText?.getAttribute('text-anchor')).toBe('middle');
+        // The sublabel sits above (smaller y than) the label — both clear of the horizontal line at point.y.
+        expect(Number(sublabelText?.getAttribute('y'))).toBeLessThan(Number(labelText?.getAttribute('y')));
+        expect(Number(sublabelText?.getAttribute('y'))).toBeLessThan(point.y);
+      }
+    });
+
+    it('the viewBox has room above the interchange\'s stacked label — nothing clips at the top edge', () => {
+      const selfBranch = network.lines.find((l) => l.kind === 'selfBranch');
+      if (selfBranch?.kind !== 'selfBranch') throw new Error('expected a selfBranch line');
+      const interchangeId = selfBranch.branchesFromStationId;
+      const interchangeStation = network.stations.find((s) => s.id === interchangeId)!;
+      const { container } = render(<NetworkMap network={network} layout={layout} />);
+      const texts = Array.from(container.querySelectorAll('svg text'));
+      const sublabelText = texts.find((t) => t.textContent?.includes(interchangeStation.sublabel ?? ' '));
+      expect(Number(sublabelText?.getAttribute('y'))).toBeGreaterThan(0);
+    });
+  });
 });

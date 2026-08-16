@@ -76,4 +76,31 @@ describe('StationFragment', () => {
     const centred = circles.some((c) => Math.abs(Number(c.getAttribute('cx')) - viewBoxWidth / 2) < 0.01);
     expect(centred).toBe(true);
   });
+
+  it('an off-network marker is a legible dashed ring, not a tiny fuzzy dot', () => {
+    // The old r=6 circle compressed its dasharray into something that read
+    // as a loading spinner rather than "disconnected from the network."
+    const [firstItem] = network.offNetwork;
+    if (!firstItem) throw new Error('expected at least one off-network item');
+    const fragment = computeFragment(network, { type: 'offNetwork', itemId: firstItem.id });
+    const { container } = render(<StationFragment fragment={fragment} />);
+    const circle = container.querySelector('circle');
+    expect(Number(circle?.getAttribute('r'))).toBeGreaterThanOrEqual(10);
+    expect(circle?.getAttribute('stroke-dasharray')).toBeTruthy();
+  });
+
+  it('a long off-network label wraps rather than overflowing the fixed 200-unit viewBox width', () => {
+    const longest = [...network.offNetwork].sort((a, b) => b.label.length - a.label.length)[0];
+    if (!longest) throw new Error('expected at least one off-network item');
+    const fragment = computeFragment(network, { type: 'offNetwork', itemId: longest.id });
+    const { container } = render(<StationFragment fragment={fragment} />);
+    const tspans = container.querySelectorAll('svg text tspan');
+    expect(tspans.length).toBeGreaterThan(0);
+    for (const tspan of Array.from(tspans)) {
+      // Each wrapped line stays well within the 200-unit viewBox — a
+      // generous per-character estimate is enough to catch an unwrapped
+      // full-length label, which would run to 300px+.
+      expect((tspan.textContent ?? '').length * 7).toBeLessThan(200);
+    }
+  });
 });
