@@ -1,45 +1,52 @@
 import Link from 'next/link';
 import { EmergencyBanner } from '@/components/emergency/EmergencyBanner';
+import { NetworkMap } from '@/components/pathway/NetworkMap';
+import { network } from '@/lib/network/definition';
+import { computeFullLayout } from '@/lib/network/layout';
 
-/** DESIGN.md §5: two doors, same content. A single unified dashboard would fail both. */
+/**
+ * DESIGN.md v3 §5, "The home page is the network": "Not a heading, a
+ * paragraph, and two cards. The full map, at full width, with the
+ * emergency bypass and the off-network exclusions visible. Mode
+ * selection sits above it as a small pair of links, not as the entire
+ * first screen. A visitor should understand the shape of the referral
+ * system before they choose a door."
+ */
 export default function HomePage() {
+  const layout = computeFullLayout(network);
+
   return (
     <div>
       <EmergencyBanner />
-      <div className="max-w-3xl mx-auto px-4 py-10 sm:px-6 space-y-8">
-        <div>
-          <h1 className="text-heading font-medium">Alur JKN</h1>
-          <p className="text-body-lg mt-2">
-            Menjelaskan alur rujukan dan penjaminan JKN, dan menghasilkan pertanyaan yang tepat untuk
-            ditanyakan ke petugas. Bukan verdict, bukan kanal resmi BPJS Kesehatan.
+      <div className="px-4 py-8 sm:px-6">
+        <div className="max-w-3xl mx-auto flex flex-wrap items-center justify-between gap-4 mb-6">
+          <p className="text-body text-ink/80">
+            Alur JKN menjelaskan sistem rujukan dan penjaminan — bukan verdict, bukan kanal resmi BPJS
+            Kesehatan.
           </p>
+          <nav className="flex gap-3 flex-wrap" aria-label="Pilih mode">
+            <Link
+              href="/id/petugas"
+              className="min-h-[48px] px-4 inline-flex items-center border-2 border-ink rounded-md text-body font-medium hover:bg-ink/5"
+            >
+              Mode petugas
+            </Link>
+            <Link
+              href="/id/keluarga"
+              className="min-h-[56px] px-4 inline-flex items-center border-2 border-ink rounded-md text-body font-medium hover:bg-ink/5"
+            >
+              Mode keluarga
+            </Link>
+          </nav>
         </div>
 
-        <div className="grid sm:grid-cols-2 gap-4">
-          <Link
-            href="/id/petugas"
-            className="block border-2 border-ink rounded-lg p-6 min-h-[48px] hover:bg-ink/5"
-          >
-            <h2 className="text-key font-medium">Mode petugas</h2>
-            <p className="text-body mt-2">
-              Daftar skenario ringkas, satu tap ke penjelasan. Untuk dijelaskan lewat meja dalam waktu
-              singkat.
-            </p>
-          </Link>
-          <Link
-            href="/id/keluarga"
-            className="block border-2 border-ink rounded-lg p-6 min-h-[56px] hover:bg-ink/5"
-          >
-            <h2 className="text-key font-medium">Mode keluarga</h2>
-            <p className="text-body mt-2">
-              Satu pertanyaan per layar, tanpa tekanan progres. Untuk dibaca sendiri, pelan-pelan.
-            </p>
+        <NetworkMap network={network} layout={layout} />
+
+        <div className="max-w-3xl mx-auto mt-6">
+          <Link href="/id/alur" className="underline underline-offset-4 text-body inline-block">
+            Jelajahi posisi Anda di peta →
           </Link>
         </div>
-
-        <Link href="/id/alur" className="underline underline-offset-4 text-body inline-block">
-          Lihat peta alur rujukan →
-        </Link>
       </div>
     </div>
   );
