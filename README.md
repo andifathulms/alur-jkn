@@ -7,13 +7,15 @@ See [`PRD.md`](./PRD.md) for what this is and why, [`DESIGN.md`](./DESIGN.md) fo
 speaks, and [`CLAUDE.md`](./CLAUDE.md) for the invariants that gate every change. This is a v2
 revision of a shipped v1 — see [`MIGRATION.md`](./MIGRATION.md) for the brief that drove it.
 
-**Status:** v2, step 2 of 7 (gating checks). The content model now has an outcome state union
-(`payer` / `excluded` / `depends`) instead of a payer-only routing field, and the ten scenarios are
-reclassified accordingly. `copy:check` enforces that "tidak ditanggung" and its variants appear only
-on an `excluded` outcome with its Pasal 52 article rendered inline. The reference layer, the INA-CBG
-page, and condition pages (steps 3-7) haven't started. Rule content is **draft, not re-verified** —
-see [`UPDATING.md`](./UPDATING.md) before treating any citation as accurate, and the hospital-staff
-interviews CLAUDE.md's M0 calls for haven't happened yet.
+**Status:** v2, step 4 of 7 (reference layer) done. The content model has an outcome state union
+(`payer` / `excluded` / `depends`) instead of a payer-only routing field; `copy:check` enforces that
+"tidak ditanggung" and its variants appear only on a genuine Pasal 52 item with its article rendered
+inline. All six `/rujukan/*` reference pages exist — the INA-CBG spine plus pengecualian, poli,
+alat-kesehatan, obat, and kelas — sharing one layout with an index rail and live filter. Condition
+pages, cross-type search, and reference/condition share cards (steps 5-7) haven't started. Content is
+**draft, not re-verified** — see [`UPDATING.md`](./UPDATING.md) before treating any citation as
+accurate (the `pengecualian` list especially — it's explicitly not asserted complete), and the
+hospital-staff interviews CLAUDE.md's M0 calls for haven't happened yet.
 
 ## Commands
 
@@ -40,12 +42,14 @@ pnpm lint
 
 ## What's not yet built
 
-- The reference layer, INA-CBG explainer, and condition pages (MIGRATION.md steps 3-5).
-- Cross-content-type search and the staff-mode reference index (step 6).
+- Condition pages (MIGRATION.md step 5) — the per-procedure five-section template.
+- Cross-content-type search and the staff-mode reference index (step 6) — staff mode still only
+  shows the scenario list; the reference layer is reachable via nav but not integrated there yet.
 - Share cards and print sheets for the reference/condition types (step 7) — scenarios already have
   these (`components/share/ShareCard.tsx`).
 - English content (`/en/*`) — the `[locale]` route is structurally ready but only `id` has copy.
-- Legal re-verification of the rule packs and the hospital-staff interviews M0 calls for.
+- Legal re-verification of everything in `data/rules/` and `data/reference/`, and the hospital-staff
+  interviews M0 calls for.
 
 ## Known deviation from CLAUDE.md's layout tree
 
