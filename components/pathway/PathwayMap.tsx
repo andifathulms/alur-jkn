@@ -43,7 +43,7 @@ export function PathwayMap({ position = null }: { position?: PathwayPosition }) 
         y1={LINE_Y}
         x2={STATIONS[2].x}
         y2={LINE_Y}
-        stroke="#DCD8CF"
+        stroke="var(--color-rule)"
         strokeWidth={8}
         strokeLinecap="round"
       />
@@ -51,7 +51,7 @@ export function PathwayMap({ position = null }: { position?: PathwayPosition }) 
       {/* base emergency route — muted dashed, enters the hospital from below, skipping FKTP */}
       <path
         d={`M ${rs.x} ${CARE_Y} L ${rs.x} ${LINE_Y}`}
-        stroke="#DCD8CF"
+        stroke="var(--color-rule)"
         strokeWidth={8}
         strokeLinecap="round"
         strokeDasharray="1 18"
@@ -64,7 +64,7 @@ export function PathwayMap({ position = null }: { position?: PathwayPosition }) 
           y1={LINE_Y}
           x2={referralProgressX}
           y2={LINE_Y}
-          stroke="#2F6B5E"
+          stroke="var(--color-payer-1)"
           strokeWidth={8}
           strokeLinecap="round"
           pathLength={1}
@@ -78,7 +78,7 @@ export function PathwayMap({ position = null }: { position?: PathwayPosition }) 
           y1={CARE_Y}
           x2={rs.x}
           y2={LINE_Y}
-          stroke="#C2542B"
+          stroke="var(--color-care)"
           strokeWidth={8}
           strokeLinecap="round"
           pathLength={1}
@@ -86,7 +86,7 @@ export function PathwayMap({ position = null }: { position?: PathwayPosition }) 
         />
       )}
 
-      <circle cx={rs.x} cy={CARE_Y} r={7} fill="#C2542B" />
+      <circle cx={rs.x} cy={CARE_Y} r={7} fill="var(--color-care)" />
       <text x={rs.x} y={CARE_Y + 24} textAnchor="middle" className="fill-ink" fontSize={13}>
         Jalur gawat darurat
       </text>
@@ -97,8 +97,8 @@ export function PathwayMap({ position = null }: { position?: PathwayPosition }) 
             cx={s.x}
             cy={LINE_Y}
             r={s.id === 'rumahSakit' ? 14 : 10}
-            fill="#F7F5F0"
-            stroke="#1F2421"
+            fill="var(--color-paper)"
+            stroke="var(--color-ink)"
             strokeWidth={3}
           />
           <text x={s.x} y={LINE_Y - 26} textAnchor="middle" className="fill-ink font-medium" fontSize={15}>
@@ -117,7 +117,7 @@ export function PathwayMap({ position = null }: { position?: PathwayPosition }) 
               ? { x: rs.x, y: (CARE_Y + LINE_Y) / 2 }
               : { x: STATIONS.find((s) => s.id === position)?.x ?? STATIONS[0].x, y: LINE_Y };
           return (
-            <circle cx={marker.x} cy={marker.y} r={6} fill="#1F2421">
+            <circle cx={marker.x} cy={marker.y} r={6} fill="var(--color-ink)">
               <title>Posisi Anda</title>
             </circle>
           );

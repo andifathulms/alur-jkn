@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { PathwayMap, type PathwayPosition } from './PathwayMap';
+import { buttonClassName } from '@/components/primitives/Button';
 
 const OPTIONS: Array<{ value: PathwayPosition; label: string }> = [
   { value: null, label: 'Tanpa posisi' },
@@ -24,9 +25,7 @@ export function PathwayExplorer() {
             type="button"
             onClick={() => setPosition(opt.value)}
             aria-pressed={position === opt.value}
-            className={`min-h-[48px] px-3 rounded-md border-2 text-caption font-medium ${
-              position === opt.value ? 'border-ink bg-ink text-paper' : 'border-ink hover:bg-ink/5'
-            }`}
+            className={buttonClassName({ size: 'caption', pressed: position === opt.value })}
           >
             {opt.label}
           </button>

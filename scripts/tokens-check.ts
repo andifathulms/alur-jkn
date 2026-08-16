@@ -4,17 +4,16 @@ import { fileURLToPath } from 'node:url';
 
 /**
  * DESIGN.md §17, "Token consumption" — one of the six new gating checks.
- * "Fail on a hand-written `min-h-[48px]` where `min-h-target` exists, and
- * on a raw hex in `app/` or `components/`."
+ * "Fail on a hand-written arbitrary target value where a token exists,
+ * and on a raw hex in `app/` or `components/`."
  *
- * Not yet wired as a blocking gate (see .github/workflows/deploy.yml) —
- * as of this script's introduction it fails against the current codebase
- * (14 `min-h-[48px]`, 4 `min-h-[56px]`, and raw hex literals in
- * PathwayMap.tsx and InaCbgDiagram.tsx — see DESIGN-AUDIT.md §3). Fixing
- * those is component work (DESIGN.md's build order puts the primitive
- * layer, step 7, and the SVG diagrams' colour handling later), outside
- * this change's scope. The check is real and un-softened; only its place
- * in the pipeline (blocking vs. informational) is deferred.
+ * Build order step 7 (the primitive layer, components/primitives/Button.tsx)
+ * absorbed every arbitrary `min-h-[48px]`/`[56px]` into the
+ * `min-h-target`/`min-h-target-family` tokens, and PathwayMap.tsx's raw hex
+ * literals became `var(--color-x)`. The remaining 3 raw hex literals are
+ * all in InaCbgDiagram.tsx, which build order step 8 rewrites as a
+ * data-bound diagram — fixing its colours now would be thrown away then.
+ * Not yet a blocking gate; becomes one once step 8 lands.
  */
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');

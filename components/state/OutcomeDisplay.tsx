@@ -1,6 +1,10 @@
 import type { Outcome } from '@/lib/content/outcome';
 import { PayerHandoffBar } from '@/components/handoff/PayerHandoffBar';
+import { payerClasses } from '@/components/handoff/payerStyle';
 import { OUTCOME_LABELS, PASAL_52_INSTRUMENT } from '@/lib/copy/outcomeStrings';
+
+/** DESIGN.md §3, State B: rendered in the `--self` lane — the same neutral, out-of-pocket colour and pattern §2 defines, reused via payerStyle.ts rather than reimplemented. */
+const excludedSwatch = payerClasses({ type: 'self', label: 'Mandiri' });
 
 /**
  * DESIGN.md v2 §3 — the three states, dispatched from a scenario's (or
@@ -16,7 +20,7 @@ export function OutcomeDisplay({ outcome }: { outcome: Outcome }) {
     case 'excluded':
       return (
         <div className="space-y-2">
-          <div className="h-10 rounded-md border-4 border-ink/20 bg-self bg-[repeating-linear-gradient(-45deg,rgba(247,245,240,0.35)_0,rgba(247,245,240,0.35)_2px,transparent_2px,transparent_8px)]" />
+          <div className={`h-10 rounded-md border-4 border-ink/20 ${excludedSwatch.bg} ${excludedSwatch.pattern}`} />
           <p className="text-caption">
             {OUTCOME_LABELS.excludedPrefix}{' '}
             <span className="font-mono">

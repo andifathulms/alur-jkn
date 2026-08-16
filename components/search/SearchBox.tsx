@@ -24,7 +24,7 @@ export function SearchBox({ items }: { items: SearchItem[] }) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={SEARCH_LABELS.placeholder}
-          className="w-full min-h-[56px] px-4 border-2 border-ink rounded-md text-body-lg"
+          className="w-full min-h-target-family px-4 border-2 border-ink rounded-md text-body-lg"
         />
       </label>
 
@@ -50,7 +50,7 @@ function SearchResultRow({ item }: { item: SearchItem }) {
     <li>
       <Link
         href={item.href}
-        className="block min-h-[48px] border border-rule rounded-md p-3 hover:bg-ink/5"
+        className="block min-h-target border border-rule rounded-md p-3 hover:bg-ink/5"
       >
         <span className="text-caption font-bold uppercase tracking-wide text-ink/70">
           {CONTENT_TYPE_LABELS[item.contentType]}

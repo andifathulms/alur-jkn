@@ -28,7 +28,7 @@ export default function PetugasPage() {
                 <li key={s.id}>
                   <Link
                     href={`/id/petugas/${s.id}`}
-                    className="flex items-center justify-between gap-4 px-4 py-4 min-h-[48px] hover:bg-ink/5"
+                    className="flex items-center justify-between gap-4 px-4 py-4 min-h-target hover:bg-ink/5"
                   >
                     <span className="text-body-lg">{s.title}</span>
                     <span aria-hidden className="text-ink/50">
@@ -47,7 +47,7 @@ export default function PetugasPage() {
                 <li key={r.slug}>
                   <Link
                     href={referenceHref(r.slug)}
-                    className="flex items-center justify-between gap-4 px-4 py-4 min-h-[48px] hover:bg-ink/5"
+                    className="flex items-center justify-between gap-4 px-4 py-4 min-h-target hover:bg-ink/5"
                   >
                     <span className="text-body-lg">{r.title}</span>
                     <span aria-hidden className="text-ink/50">

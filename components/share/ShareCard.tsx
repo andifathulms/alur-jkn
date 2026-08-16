@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { buttonClassName } from '@/components/primitives/Button';
 
 /**
  * DESIGN.md §5: every scenario has a one-page layout that prints cleanly in
@@ -23,26 +24,13 @@ export function ShareCard({ shareText }: { shareText: string }) {
 
   return (
     <div className="no-print flex gap-4 flex-wrap">
-      <button
-        type="button"
-        onClick={() => window.print()}
-        className="min-h-[48px] px-4 border-2 border-ink rounded-md text-body font-medium hover:bg-ink/5"
-      >
+      <button type="button" onClick={() => window.print()} className={buttonClassName({})}>
         Cetak
       </button>
-      <button
-        type="button"
-        onClick={copyText}
-        className="min-h-[48px] px-4 border-2 border-ink rounded-md text-body font-medium hover:bg-ink/5"
-      >
+      <button type="button" onClick={copyText} className={buttonClassName({})}>
         {copied ? 'Tersalin' : 'Salin teks'}
       </button>
-      <a
-        href={whatsappHref}
-        target="_blank"
-        rel="noreferrer"
-        className="min-h-[48px] px-4 border-2 border-ink rounded-md text-body font-medium hover:bg-ink/5 inline-flex items-center"
-      >
+      <a href={whatsappHref} target="_blank" rel="noreferrer" className={buttonClassName({})}>
         Bagikan lewat WhatsApp
       </a>
     </div>

@@ -24,7 +24,7 @@ export function ReferenceRail({ items }: { items: RailItem[] }) {
   return (
     <nav aria-label="Daftar referensi" className="no-print">
       <details open>
-        <summary className="md:hidden min-h-[48px] flex items-center px-3 font-medium cursor-pointer border-2 border-ink rounded-md mb-3">
+        <summary className="md:hidden min-h-target flex items-center px-3 font-medium cursor-pointer border-2 border-ink rounded-md mb-3">
           Daftar referensi
         </summary>
         <div className="md:sticky md:top-4">
@@ -35,7 +35,7 @@ export function ReferenceRail({ items }: { items: RailItem[] }) {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Cari referensi…"
-              className="w-full min-h-[48px] px-3 border-2 border-ink rounded-md text-body bg-paper"
+              className="w-full min-h-target px-3 border-2 border-ink rounded-md text-body bg-paper"
             />
           </label>
           <ul className="space-y-1">
@@ -47,7 +47,7 @@ export function ReferenceRail({ items }: { items: RailItem[] }) {
                   <Link
                     href={href}
                     aria-current={active ? 'page' : undefined}
-                    className={`min-h-[48px] flex items-center px-3 rounded-md text-body ${
+                    className={`min-h-target flex items-center px-3 rounded-md text-body ${
                       active ? 'bg-ink text-paper' : 'hover:bg-ink/5'
                     }`}
                   >

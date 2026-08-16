@@ -27,6 +27,6 @@ describe('pathway route-drawing', () => {
     const { container } = render(<PathwayMap position="gawatDarurat" />);
     const segments = container.querySelectorAll('.pathway-progress');
     expect(segments).toHaveLength(1);
-    expect(segments[0]?.getAttribute('stroke')).toBe('#C2542B'); // --care, DESIGN.md §2 — emergency route only
+    expect(segments[0]?.getAttribute('stroke')).toBe('var(--color-care)'); // --care, DESIGN.md §2 — emergency route only
   });
 });

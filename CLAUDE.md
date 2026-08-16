@@ -53,11 +53,14 @@ pnpm lint
 colour tokens were corrected to their claimed ratio (`--self`/`--care` darkened, `DESIGN.md` §2;
 `text-ink/60` retired in favour of `text-ink/70`, the lightest opacity that clears AA), every coverage
 route carries a station fragment (`DESIGN.md`'s build order step 4), and `app/layout.tsx`'s metadata
-title now imports `APP_NAME` instead of re-typing it. `tokens:check` and `offline:check` still fail
-against genuine gaps predating `DESIGN.md` v3 (hand-written arbitrary target values and raw hex in the
-legacy pathway/INA-CBG diagrams; no service worker yet) rather than being weakened to pass — each
-becomes a blocking gate once its corresponding fix lands, per `DESIGN.md`'s build order (step 7 for
-`tokens:check`, step 9 for `offline:check`).
+title now imports `APP_NAME` instead of re-typing it. `components/primitives/Button.tsx` (build order
+step 7) absorbed every duplicated bordered-button className string and every hand-written arbitrary
+target value into `min-h-target`/`min-h-target-family`; `PathwayMap.tsx`'s raw hex became
+`var(--color-x)`. `tokens:check` still fails on 3 raw hex literals, all in `InaCbgDiagram.tsx` — build
+order step 8 rewrites that component as a data-bound diagram, so fixing its colours now would be thrown
+away then. `offline:check` still fails for the same reason it always has (no service worker yet). Each
+becomes a blocking gate once its corresponding fix lands (step 8 for `tokens:check`, step 9 for
+`offline:check`).
 
 The four original gating checks (`content:validate`, `copy:check`, `bundle:check`, plus `typecheck` and
 `lint`) run in `build` and CI and are blocking. **None may be skipped, weakened, or flagged around, and
@@ -65,6 +68,15 @@ they outrank every check added since.** The five `DESIGN.md` §17 checks above r
 `contrast:check`, `strings:check`, and `map:check` are blocking now that they pass; `tokens:check` and
 `offline:check` remain informational there until their corresponding fix lands (see above) —
 informational is a pipeline-wiring decision, not a licence to soften what the check itself asserts.
+
+## Primitives
+
+`components/primitives/Button.tsx` is the one shared building block so far — `buttonClassName()`,
+`Button`, and `LinkButton`, covering the bordered-button pattern used everywhere from `ShareCard` to the
+home page's mode links to `FamilyWizard`'s Ya/Tidak choices. `payerClasses()` in
+`components/handoff/payerStyle.ts` is the other reused primitive — every payer-coloured surface,
+including `OutcomeDisplay`'s excluded-state swatch, goes through it rather than reimplementing the
+background/pattern classes inline.
 
 ## Layout
 

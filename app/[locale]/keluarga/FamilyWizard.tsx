@@ -15,6 +15,7 @@ import { scenarioShareText } from '@/lib/copy/shareText';
 import { QuestionCard } from '@/components/question/QuestionCard';
 import { ShareCard } from '@/components/share/ShareCard';
 import { StationFragment } from '@/components/pathway/StationFragment';
+import { buttonClassName } from '@/components/primitives/Button';
 import { computeFragment } from '@/lib/network/fragment';
 import type { Network } from '@/lib/network/schema';
 
@@ -57,14 +58,14 @@ export function FamilyWizard({ network }: { network: Network }) {
           <button
             type="button"
             onClick={() => answer(question, true)}
-            className="flex-1 min-h-[56px] rounded-lg border-2 border-ink text-key font-medium hover:bg-ink/5"
+            className={buttonClassName({ size: 'family', className: 'flex-1 rounded-lg' })}
           >
             Ya
           </button>
           <button
             type="button"
             onClick={() => answer(question, false)}
-            className="flex-1 min-h-[56px] rounded-lg border-2 border-ink text-key font-medium hover:bg-ink/5"
+            className={buttonClassName({ size: 'family', className: 'flex-1 rounded-lg' })}
           >
             Tidak
           </button>
@@ -73,7 +74,7 @@ export function FamilyWizard({ network }: { network: Network }) {
           <button
             type="button"
             onClick={goBack}
-            className="mt-6 min-h-[48px] px-4 underline underline-offset-4 text-body"
+            className="mt-6 min-h-target px-4 underline underline-offset-4 text-body"
           >
             ← Kembali
           </button>
@@ -107,11 +108,11 @@ export function FamilyWizard({ network }: { network: Network }) {
         <button
           type="button"
           onClick={goBack}
-          className="min-h-[48px] px-4 underline underline-offset-4 text-body"
+          className="min-h-target px-4 underline underline-offset-4 text-body"
         >
           ← Kembali
         </button>
-        <Link href="/id/alur" className="min-h-[48px] px-4 underline underline-offset-4 text-body">
+        <Link href="/id/alur" className="min-h-target px-4 underline underline-offset-4 text-body">
           Lihat peta alur →
         </Link>
       </div>

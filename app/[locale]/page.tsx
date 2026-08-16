@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { EmergencyBanner } from '@/components/emergency/EmergencyBanner';
 import { NetworkMap } from '@/components/pathway/NetworkMap';
+import { LinkButton } from '@/components/primitives/Button';
 import { network } from '@/lib/network/definition';
 import { computeFullLayout } from '@/lib/network/layout';
 
@@ -25,18 +26,10 @@ export default function HomePage() {
             Kesehatan.
           </p>
           <nav className="flex gap-3 flex-wrap" aria-label="Pilih mode">
-            <Link
-              href="/id/petugas"
-              className="min-h-[48px] px-4 inline-flex items-center border-2 border-ink rounded-md text-body font-medium hover:bg-ink/5"
-            >
-              Mode petugas
-            </Link>
-            <Link
-              href="/id/keluarga"
-              className="min-h-[56px] px-4 inline-flex items-center border-2 border-ink rounded-md text-body font-medium hover:bg-ink/5"
-            >
+            <LinkButton href="/id/petugas">Mode petugas</LinkButton>
+            <LinkButton href="/id/keluarga" size="family">
               Mode keluarga
-            </Link>
+            </LinkButton>
           </nav>
         </div>
 
