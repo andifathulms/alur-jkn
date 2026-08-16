@@ -30,4 +30,7 @@ export const operasiUsusBuntu: Condition = {
     { packId: 'perpres-82-2018', ruleId: 'gawat-darurat-akses-langsung' },
     { packId: 'permenkes-3-2023', ruleId: 'paket-ina-cbg' },
   ],
+  inaCbgPackageItems: ['Operasi terbuka', 'Laparoskopi'],
+  emergencyBypassApplies: true,
+  outOfPocketStops: ['naikKelas', 'obatNonFornas'],
 };

@@ -9,6 +9,8 @@ import { referenceShareText } from '@/lib/copy/shareText';
 import { computeFragment } from '@/lib/network/fragment';
 import { network } from '@/lib/network/definition';
 
+const ILLUSTRATIVE_PACKAGE_ITEMS = ['Operasi terbuka', 'Laparoskopi', 'Rawat inap', 'Obat & alkes'];
+
 /**
  * MIGRATION.md step 3 — the spine. "This page is the correction the whole
  * product exists to make — give it room": wide measure, one section per
@@ -38,7 +40,11 @@ export default function InaCbgPage() {
 
       <ShareCard shareText={referenceShareText(entry)} />
 
-      <InaCbgDiagram />
+      <InaCbgDiagram
+        items={ILLUSTRATIVE_PACKAGE_ITEMS}
+        caption="Contoh skematik — bukan daftar lengkap dan tidak menunjukkan nilai tarif."
+        ariaLabel="Diagram satu paket INA-CBG berisi beberapa metode berbeda — operasi terbuka, laparoskopi, rawat inap, obat dan alat kesehatan — dengan tarif paket yang sama untuk semuanya"
+      />
 
       {entry.sections.map((section) => (
         <div key={section.heading}>

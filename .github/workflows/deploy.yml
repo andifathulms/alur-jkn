@@ -32,19 +32,15 @@ jobs:
       - run: pnpm test:safety
       - run: pnpm test:a11y
       - run: pnpm bundle:check
-      # DESIGN.md §17's new checks. contrast:check (build order step 5),
-      # map:check (step 4), and strings:check are real and now pass, so
-      # they block deploy like the checks above. tokens:check and
-      # offline:check still fail against genuine, pre-existing gaps outside
-      # those steps' scope (see CLAUDE.md's Commands section for what each
-      # reports); continue-on-error keeps them visible without blocking
-      # deploy — each moves up here once its corresponding build-order step
-      # lands (tokens:check at step 7, offline:check at step 9).
+      # DESIGN.md §17's new checks. contrast:check (step 5), map:check
+      # (step 4), strings:check, and tokens:check (step 7) are real and
+      # now pass, so they block deploy like the checks above. offline:check
+      # still fails — no service worker yet, build order step 9 — so it
+      # stays continue-on-error until that lands.
       - run: pnpm contrast:check
       - run: pnpm map:check
       - run: pnpm strings:check
       - run: pnpm tokens:check
-        continue-on-error: true
       - run: pnpm offline:check
         continue-on-error: true
       - uses: actions/upload-pages-artifact@v3

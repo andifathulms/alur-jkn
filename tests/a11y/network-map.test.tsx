@@ -67,4 +67,46 @@ describe('NetworkMap', () => {
     );
     expect(offNetworkCircle?.getAttribute('stroke-dasharray')).toBeTruthy();
   });
+
+  describe('with a highlight (DESIGN.md v3 §5, condition route diagrams — build order step 8)', () => {
+    it('without a highlight, every line and station renders at full opacity', async () => {
+      const { container } = render(<NetworkMap network={network} layout={layout} />);
+      for (const el of container.querySelectorAll('svg path, svg g')) {
+        expect(el.getAttribute('opacity')).not.toBe('0.25');
+      }
+      expect(await axe(container)).toHaveNoViolations();
+    });
+
+    it('a line/station not named in the highlight dims; a named one stays at full opacity', async () => {
+      const referral = network.lines.find((l) => l.kind === 'referral')!;
+      const highlight = { lineIds: new Set([referral.id]), stationIds: new Set(referral.stationIds) };
+      const { container } = render(<NetworkMap network={network} layout={layout} highlight={highlight} />);
+
+      const careBypass = network.lines.find((l) => l.kind === 'careBypass')!;
+      const paths = Array.from(container.querySelectorAll('svg path'));
+      // the care-bypass path is the shortest — a single "M x y L x y" vertical segment.
+      const dimmedPath = paths.find((p) => p.getAttribute('opacity') === '0.25');
+      expect(dimmedPath).toBeDefined();
+
+      const referralPath = paths.find((p) =>
+        referral.stationIds.every((id) => p.getAttribute('d')?.includes(String(layout.stationPositions[id]?.x))),
+      );
+      expect(referralPath?.getAttribute('opacity')).not.toBe('0.25');
+
+      expect(careBypass.id).not.toBe(referral.id); // sanity: distinct lines
+      expect(await axe(container)).toHaveNoViolations();
+    });
+
+    it('the off-network cluster dims whenever a highlight is present, regardless of its contents', () => {
+      const highlight = { lineIds: new Set<string>(), stationIds: new Set<string>() };
+      const { container } = render(<NetworkMap network={network} layout={layout} highlight={highlight} />);
+      const [firstItem] = network.offNetwork;
+      if (!firstItem) throw new Error('expected at least one off-network item');
+      const point = layout.offNetworkPositions[firstItem.id];
+      const group = Array.from(container.querySelectorAll('svg g')).find((g) =>
+        g.querySelector(`circle[cx="${point?.x}"][cy="${point?.y}"]`),
+      );
+      expect(group?.getAttribute('opacity')).toBe('0.25');
+    });
+  });
 });

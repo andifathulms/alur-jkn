@@ -49,25 +49,22 @@ pnpm typecheck
 pnpm lint
 ```
 
-`contrast:check`, `strings:check`, and `map:check` are real, un-softened checks and now pass:
-colour tokens were corrected to their claimed ratio (`--self`/`--care` darkened, `DESIGN.md` §2;
+`contrast:check`, `strings:check`, `map:check`, and `tokens:check` are real, un-softened checks and now
+pass: colour tokens were corrected to their claimed ratio (`--self`/`--care` darkened, `DESIGN.md` §2;
 `text-ink/60` retired in favour of `text-ink/70`, the lightest opacity that clears AA), every coverage
-route carries a station fragment (`DESIGN.md`'s build order step 4), and `app/layout.tsx`'s metadata
-title now imports `APP_NAME` instead of re-typing it. `components/primitives/Button.tsx` (build order
-step 7) absorbed every duplicated bordered-button className string and every hand-written arbitrary
-target value into `min-h-target`/`min-h-target-family`; `PathwayMap.tsx`'s raw hex became
-`var(--color-x)`. `tokens:check` still fails on 3 raw hex literals, all in `InaCbgDiagram.tsx` — build
-order step 8 rewrites that component as a data-bound diagram, so fixing its colours now would be thrown
-away then. `offline:check` still fails for the same reason it always has (no service worker yet). Each
-becomes a blocking gate once its corresponding fix lands (step 8 for `tokens:check`, step 9 for
-`offline:check`).
+route carries a station fragment (`DESIGN.md`'s build order step 4), `app/layout.tsx`'s metadata title
+now imports `APP_NAME` instead of re-typing it, `components/primitives/Button.tsx` (step 7) absorbed
+every duplicated bordered-button className string and hand-written arbitrary target value into
+`min-h-target`/`min-h-target-family`, and `InaCbgDiagram.tsx`'s raw hex became `var(--color-x)` when it
+was rewritten as a data-bound diagram (step 8). `offline:check` still fails for the reason it always has
+(no service worker yet) — it becomes a blocking gate once step 9 lands.
 
 The four original gating checks (`content:validate`, `copy:check`, `bundle:check`, plus `typecheck` and
 `lint`) run in `build` and CI and are blocking. **None may be skipped, weakened, or flagged around, and
 they outrank every check added since.** The five `DESIGN.md` §17 checks above run in CI too;
-`contrast:check`, `strings:check`, and `map:check` are blocking now that they pass; `tokens:check` and
-`offline:check` remain informational there until their corresponding fix lands (see above) —
-informational is a pipeline-wiring decision, not a licence to soften what the check itself asserts.
+`contrast:check`, `strings:check`, `map:check`, and `tokens:check` are blocking now that they pass;
+`offline:check` remains informational until its corresponding fix lands (see above) — informational is a
+pipeline-wiring decision, not a licence to soften what the check itself asserts.
 
 ## Primitives
 

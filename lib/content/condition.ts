@@ -35,6 +35,20 @@ export const ConditionSchema = z
     /** §5 The question to ask — the product's actual output, same as a scenario's. */
     questionToAsk: z.string().min(1),
     ruleRefs: z.array(RuleRefSchema).min(1),
+    /**
+     * DESIGN.md v3 §4: "the diagram is data-bound. Each condition supplies
+     * the items inside its own package, and the diagram renders that
+     * package." Chip labels for the INA-CBG diagram — the alternative
+     * methods named in `methodDeterminant`, not a separate invention.
+     */
+    inaCbgPackageItems: z.array(z.string().min(1)).min(1),
+    /**
+     * DESIGN.md v3 §5.7: "whether the emergency bypass applies, and which
+     * out-of-pocket stops are in play for that procedure" — drives which
+     * lines the condition's own route diagram highlights.
+     */
+    emergencyBypassApplies: z.boolean(),
+    outOfPocketStops: z.array(z.enum(['naikKelas', 'obatNonFornas', 'alkesAboveCeiling'])),
   })
   .strict();
 export type Condition = z.infer<typeof ConditionSchema>;

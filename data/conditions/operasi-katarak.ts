@@ -28,4 +28,7 @@ export const operasiKatarak: Condition = {
     { packId: 'perpres-82-2018', ruleId: 'rujukan-berjenjang' },
     { packId: 'permenkes-3-2023', ruleId: 'paket-ina-cbg' },
   ],
+  inaCbgPackageItems: ['Fakoemulsifikasi (phaco)', 'Ekstraksi konvensional (ECCE)'],
+  emergencyBypassApplies: false,
+  outOfPocketStops: ['naikKelas', 'alkesAboveCeiling'],
 };

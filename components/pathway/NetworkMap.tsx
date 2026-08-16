@@ -1,11 +1,13 @@
 import type { Network } from '@/lib/network/schema';
 import type { FullLayout } from '@/lib/network/layout';
+import type { ConditionHighlight } from '@/lib/network/highlightedRoute';
 import { strokeDasharrayFor } from '@/lib/network/linePatternStroke';
 import { colorVarFor } from '@/lib/network/lineColorVar';
 
 const INTERCHANGE_RADIUS = 14;
 const STATION_RADIUS = 9;
 const OFF_NETWORK_RADIUS = 6;
+const DIMMED_OPACITY = 0.25;
 
 /**
  * DESIGN.md v3 §5, "The home page is the network": the full map, every
@@ -13,9 +15,26 @@ const OFF_NETWORK_RADIUS = 6;
  * inline SVG (aria-hidden) plus a sr-only text equivalent, generated from
  * `network` and an already-computed `layout` (lib/network/layout.ts) —
  * nothing is computed in this component, invariant 18.
+ *
+ * `highlight` is optional — omitted (the home page, `/alur`) every line
+ * and station renders at full opacity. When present (a condition page,
+ * DESIGN.md v3 §5 "Condition pages carry their own route"), anything not
+ * named in `highlight` dims instead of disappearing — "everything else
+ * dimmed," not hidden, so the rest of the system stays legible as context.
  */
-export function NetworkMap({ network, layout }: { network: Network; layout: FullLayout }) {
+export function NetworkMap({
+  network,
+  layout,
+  highlight,
+}: {
+  network: Network;
+  layout: FullLayout;
+  highlight?: ConditionHighlight;
+}) {
   const interchangeId = network.lines.find((l) => l.kind === 'selfBranch')?.branchesFromStationId;
+  const lineOpacity = (lineId: string) => (!highlight || highlight.lineIds.has(lineId) ? 1 : DIMMED_OPACITY);
+  const stationOpacity = (stationId: string) =>
+    !highlight || highlight.stationIds.has(stationId) ? 1 : DIMMED_OPACITY;
 
   return (
     <div>
@@ -41,6 +60,7 @@ export function NetworkMap({ network, layout }: { network: Network; layout: Full
                 strokeWidth={7}
                 strokeLinecap="round"
                 strokeDasharray={strokeDasharrayFor(line.pattern)}
+                opacity={lineOpacity(line.id)}
               />
             );
           }
@@ -59,6 +79,7 @@ export function NetworkMap({ network, layout }: { network: Network; layout: Full
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeDasharray={strokeDasharrayFor(line.pattern)}
+                opacity={lineOpacity(line.id)}
               />
             );
           }
@@ -75,6 +96,7 @@ export function NetworkMap({ network, layout }: { network: Network; layout: Full
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeDasharray={strokeDasharrayFor(line.pattern)}
+              opacity={lineOpacity(line.id)}
             />
           );
         })}
@@ -84,7 +106,7 @@ export function NetworkMap({ network, layout }: { network: Network; layout: Full
           if (!point) return null;
           const isInterchange = station.id === interchangeId;
           return (
-            <g key={station.id}>
+            <g key={station.id} opacity={stationOpacity(station.id)}>
               <circle
                 cx={point.x}
                 cy={point.y}
@@ -109,7 +131,7 @@ export function NetworkMap({ network, layout }: { network: Network; layout: Full
           const point = layout.offNetworkPositions[item.id];
           if (!point) return null;
           return (
-            <g key={item.id}>
+            <g key={item.id} opacity={highlight ? DIMMED_OPACITY : 1}>
               <circle
                 cx={point.x}
                 cy={point.y}

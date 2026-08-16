@@ -2,11 +2,14 @@ import Link from 'next/link';
 import type { Condition } from '@/lib/content/condition';
 import { RuleCitationList } from '@/components/rules/RuleCitationList';
 import { ShareCard } from '@/components/share/ShareCard';
-import { StationFragment } from '@/components/pathway/StationFragment';
+import { NetworkMap } from '@/components/pathway/NetworkMap';
+import { InaCbgDiagram } from '@/components/reference/InaCbgDiagram';
 import { CONDITION_SECTION_LABELS, CONDITION_INA_CBG_LINK_TEXT } from '@/lib/copy/conditionStrings';
 import { referenceHref } from '@/lib/content/reference';
 import { conditionShareText } from '@/lib/copy/shareText';
-import type { Fragment } from '@/lib/network/fragment';
+import type { Network } from '@/lib/network/schema';
+import type { FullLayout } from '@/lib/network/layout';
+import type { ConditionHighlight } from '@/lib/network/highlightedRoute';
 import type { Rule } from '@/lib/rules/schema';
 
 interface CitedRule {
@@ -21,8 +24,12 @@ interface CitedRule {
  * sections." This is the *only* place a condition page is assembled —
  * one template, so the order can't drift page to page.
  *
- * `fragment` is computed by the caller (invariant 18, nothing computed in
- * a component) — same discipline as `citedRules`' `stale` booleans.
+ * `network`/`layout`/`highlight` are computed by the caller (invariant
+ * 18, nothing computed in a component) — same discipline as `citedRules`'
+ * `stale` booleans. DESIGN.md v3 §5, "Condition pages carry their own
+ * route": the full network renders here with this condition's path
+ * highlighted, replacing the plain station fragment other page types use
+ * — "the strongest thing this app can show."
  *
  * The INA-CBG link in §3 is hardcoded here, not a per-condition data
  * field (invariant 7) — every condition reaches the spine unconditionally,
@@ -31,11 +38,15 @@ interface CitedRule {
 export function ConditionTemplate({
   condition,
   citedRules,
-  fragment,
+  network,
+  layout,
+  highlight,
 }: {
   condition: Condition;
   citedRules: CitedRule[];
-  fragment: Fragment;
+  network: Network;
+  layout: FullLayout;
+  highlight: ConditionHighlight;
 }) {
   return (
     <div className="max-w-xl mx-auto px-4 py-10 sm:px-6 space-y-8">
@@ -44,7 +55,7 @@ export function ConditionTemplate({
         <p className="text-body-lg mt-3">{condition.summary}</p>
       </div>
 
-      <StationFragment fragment={fragment} />
+      <NetworkMap network={network} layout={layout} highlight={highlight} />
 
       <ShareCard shareText={conditionShareText(condition, citedRules.map((c) => c.rule))} />
 
@@ -67,6 +78,13 @@ export function ConditionTemplate({
           {CONDITION_SECTION_LABELS.whyOneOption}
         </h2>
         <p className="text-body-lg mt-2">{condition.whyOneOption}</p>
+        <div className="mt-4">
+          <InaCbgDiagram
+            items={condition.inaCbgPackageItems}
+            caption={`Paket INA-CBG untuk ${condition.title.toLowerCase()} — bukan daftar lengkap dan tidak menunjukkan nilai tarif.`}
+            ariaLabel={`Diagram satu paket INA-CBG untuk ${condition.title}, berisi: ${condition.inaCbgPackageItems.join(', ')} — dengan tarif paket yang sama untuk semuanya`}
+          />
+        </div>
         <Link href={referenceHref('ina-cbg')} className="inline-block mt-2 underline underline-offset-4 text-body">
           {CONDITION_INA_CBG_LINK_TEXT} →
         </Link>
