@@ -73,7 +73,8 @@ try {
 try {
   const { referenceEntries } = await import('../data/reference');
   for (const entry of referenceEntries) {
-    for (const citation of entry.citations) {
+    const citations = entry.format === 'explainer' ? entry.citations : entry.entries.map((e) => e.citation);
+    for (const citation of citations) {
       if (isStale(citation.verifiedAt, now)) {
         console.warn(`content:validate — STALE: reference.${entry.slug} last verified ${citation.verifiedAt}`);
       }

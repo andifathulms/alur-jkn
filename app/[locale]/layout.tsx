@@ -11,10 +11,7 @@ const NAV = [
   { href: '/id/alur', label: 'Alur' },
   { href: '/id/petugas', label: 'Mode petugas' },
   { href: '/id/keluarga', label: 'Mode keluarga' },
-  // Temporary direct link — replaced by a /id/rujukan index with a
-  // full section rail once MIGRATION.md step 4 builds the other five
-  // reference sections.
-  { href: '/id/rujukan/ina-cbg', label: 'INA-CBG' },
+  { href: '/id/rujukan', label: 'Referensi JKN' },
   { href: '/id/aturan', label: 'Referensi aturan' },
 ] as const;
 
