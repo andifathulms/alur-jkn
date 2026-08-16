@@ -57,4 +57,23 @@ describe('StationFragment', () => {
     expect(svg?.innerHTML).not.toMatch(/#[0-9A-Fa-f]{3,6}\b/);
     expect(svg?.innerHTML).toMatch(/var\(--color-/);
   });
+
+  it('a single-station segment centres its station rather than starting flush against the left margin', () => {
+    // rumahSakit is an interchange: its careBypass segment has exactly one
+    // station. Left-aligned at the old fixed x, a wide centred label (e.g.
+    // "Rumah Sakit") would extend past the viewBox's left edge and clip —
+    // this asserts the circle sits at the segment's horizontal centre.
+    const fragment = computeFragment(network, { type: 'station', stationId: 'rumahSakit' });
+    if (fragment.type !== 'network') throw new Error('expected a network fragment');
+    const careBypassSegment = fragment.segments.find((s) => s.stations.length === 1);
+    if (!careBypassSegment) throw new Error('expected a single-station segment (the emergency bypass)');
+
+    const { container } = render(<StationFragment fragment={fragment} />);
+    const svg = container.querySelector('svg');
+    const viewBoxWidth = Number(svg?.getAttribute('viewBox')?.split(' ')[2]);
+    const circles = Array.from(container.querySelectorAll('circle'));
+    // The single-station segment's circle should sit at the horizontal midpoint of the viewBox.
+    const centred = circles.some((c) => Math.abs(Number(c.getAttribute('cx')) - viewBoxWidth / 2) < 0.01);
+    expect(centred).toBe(true);
+  });
 });

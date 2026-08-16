@@ -24,11 +24,11 @@ interface DisplayEntry {
  */
 export function ReferenceEntryTable({ entries, caption }: { entries: DisplayEntry[]; caption: string }) {
   return (
-    <table className="w-full block md:table border-collapse">
-      <caption className="text-left text-body text-ink/70 mb-3 block md:table-caption md:caption-top">
+    <table className="w-full block md:table print:table border-collapse">
+      <caption className="text-left text-body text-ink/70 mb-3 block md:table-caption print:table-caption md:caption-top print:caption-top">
         {caption}
       </caption>
-      <thead className="hidden md:table-header-group">
+      <thead className="hidden md:table-header-group print:table-header-group">
         <tr className="border-b-2 border-rule">
           <th scope="col" className="text-left text-caption font-bold uppercase tracking-wide py-3 pr-4">
             Item
@@ -41,27 +41,27 @@ export function ReferenceEntryTable({ entries, caption }: { entries: DisplayEntr
           </th>
         </tr>
       </thead>
-      <tbody className="block md:table-row-group">
+      <tbody className="block md:table-row-group print:table-row-group">
         {entries.map(({ entry, stale }) => (
           <tr
             key={entry.term}
             id={slugify(entry.term)}
-            className="block md:table-row border-b border-rule py-4 md:py-0 scroll-mt-4"
+            className="block md:table-row print:table-row border-b border-rule py-4 md:py-0 scroll-mt-4 print:break-inside-avoid"
           >
             <th
               scope="row"
-              className="block md:table-cell text-left font-medium text-key md:text-body-lg align-top py-1 md:py-3 md:pr-4 md:min-h-target"
+              className="block md:table-cell print:table-cell text-left font-medium text-key md:text-body-lg align-top py-1 md:py-3 md:pr-4 md:min-h-target"
             >
               {entry.term}
             </th>
-            <td className="block md:table-cell align-top py-1 md:py-3 md:pr-4">
-              <span aria-hidden className="md:hidden text-caption font-bold uppercase tracking-wide text-ink/70 block">
+            <td className="block md:table-cell print:table-cell align-top py-1 md:py-3 md:pr-4">
+              <span aria-hidden className="md:hidden print:hidden text-caption font-bold uppercase tracking-wide text-ink/70 block">
                 Ketentuan
               </span>
               <span className="text-body">{entry.definition}</span>
             </td>
-            <td className="block md:table-cell align-top py-1 md:py-3">
-              <span aria-hidden className="md:hidden text-caption font-bold uppercase tracking-wide text-ink/70 block">
+            <td className="block md:table-cell print:table-cell align-top py-1 md:py-3">
+              <span aria-hidden className="md:hidden print:hidden text-caption font-bold uppercase tracking-wide text-ink/70 block">
                 Detail
               </span>
               <span className="text-body">{entry.detail}</span>

@@ -37,7 +37,7 @@ export function NetworkMap({
     !highlight || highlight.stationIds.has(stationId) ? 1 : DIMMED_OPACITY;
 
   return (
-    <div>
+    <div className="print:break-inside-avoid">
       <svg
         viewBox={`0 0 ${layout.viewBoxWidth} ${layout.viewBoxHeight}`}
         aria-hidden="true"

@@ -4,7 +4,7 @@
  */
 export function QuestionCard({ nextAction, questionToAsk }: { nextAction: string; questionToAsk: string }) {
   return (
-    <div className="border-2 border-ink rounded-lg p-4 sm:p-6 space-y-4">
+    <div className="border-2 border-ink rounded-lg p-4 sm:p-6 space-y-4 print:break-inside-avoid">
       <div>
         <h3 className="text-caption font-bold uppercase tracking-wide text-ink/70">Yang bisa dilakukan sekarang</h3>
         <p className="text-body-lg mt-1">{nextAction}</p>

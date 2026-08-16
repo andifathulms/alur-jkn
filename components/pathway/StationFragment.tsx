@@ -21,7 +21,7 @@ const MARGIN_X = 20;
 export function StationFragment({ fragment }: { fragment: Fragment }) {
   if (fragment.type === 'offNetwork') {
     return (
-      <div>
+      <div className="print:break-inside-avoid">
         <svg
           viewBox="0 0 200 80"
           aria-hidden="true"
@@ -49,12 +49,17 @@ export function StationFragment({ fragment }: { fragment: Fragment }) {
   const width = MARGIN_X * 2 + STATION_GAP * 2;
 
   return (
-    <div>
+    <div className="print:break-inside-avoid">
       <svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true" className="w-full max-w-md h-auto">
         {fragment.segments.map((segment, segmentIndex) => {
           const y = segmentIndex * SEGMENT_HEIGHT + SEGMENT_HEIGHT / 2;
-          const xFor = (stationIndex: number) => MARGIN_X + stationIndex * STATION_GAP;
           const lastIndex = segment.stations.length - 1;
+          // Centre a segment's stations within the fixed viewBox width — a
+          // single- or two-station segment (e.g. the emergency bypass,
+          // which only touches one station) would otherwise start flush
+          // against the left margin and clip its own label.
+          const segmentOffsetX = (width - lastIndex * STATION_GAP) / 2;
+          const xFor = (stationIndex: number) => segmentOffsetX + stationIndex * STATION_GAP;
           return (
             <g key={segment.lineId}>
               {lastIndex > 0 && (

@@ -34,7 +34,7 @@ export function ReferenceEntryListPage({ slug }: { slug: string }) {
       </div>
       <ShareCard shareText={referenceShareText(entry)} />
       {entry.tabular ? (
-        <ReferenceEntryTable entries={displayEntries} caption={entry.summary} />
+        <ReferenceEntryTable entries={displayEntries} caption={`Rincian ${entry.title.toLowerCase()}`} />
       ) : (
         <ReferenceEntryList entries={displayEntries} />
       )}

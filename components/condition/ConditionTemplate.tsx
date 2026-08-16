@@ -59,21 +59,21 @@ export function ConditionTemplate({
 
       <ShareCard shareText={conditionShareText(condition, citedRules.map((c) => c.rule))} />
 
-      <section>
+      <section className="print:break-inside-avoid">
         <h2 className="text-caption font-bold uppercase tracking-wide text-ink/70">
           {CONDITION_SECTION_LABELS.route}
         </h2>
         <p className="text-body-lg mt-2">{condition.route}</p>
       </section>
 
-      <section>
+      <section className="print:break-inside-avoid">
         <h2 className="text-caption font-bold uppercase tracking-wide text-ink/70">
           {CONDITION_SECTION_LABELS.methodDeterminant}
         </h2>
         <p className="text-body-lg mt-2">{condition.methodDeterminant}</p>
       </section>
 
-      <section>
+      <section className="print:break-inside-avoid">
         <h2 className="text-caption font-bold uppercase tracking-wide text-ink/70">
           {CONDITION_SECTION_LABELS.whyOneOption}
         </h2>
@@ -90,14 +90,14 @@ export function ConditionTemplate({
         </Link>
       </section>
 
-      <section>
+      <section className="print:break-inside-avoid">
         <h2 className="text-caption font-bold uppercase tracking-wide text-ink/70">
           {CONDITION_SECTION_LABELS.costsThatRemain}
         </h2>
         <p className="text-body-lg mt-2">{condition.costsThatRemain}</p>
       </section>
 
-      <section className="border-2 border-ink rounded-lg p-4 sm:p-6">
+      <section className="border-2 border-ink rounded-lg p-4 sm:p-6 print:break-inside-avoid">
         <h2 className="text-caption font-bold uppercase tracking-wide text-ink/70">
           {CONDITION_SECTION_LABELS.questionToAsk}
         </h2>

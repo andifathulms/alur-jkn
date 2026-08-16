@@ -10,7 +10,7 @@ import { STALENESS_WARNING } from '@/lib/copy/strings';
  */
 export function CitationLine({ citation, stale }: { citation: RuleCitation; stale: boolean }) {
   return (
-    <li className="border border-rule rounded-md p-3">
+    <li className="border border-rule rounded-md p-3 print:break-inside-avoid">
       <p className="font-mono text-caption text-ink/80">
         {citation.instrument}, {citation.article}
       </p>

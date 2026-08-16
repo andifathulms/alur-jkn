@@ -55,8 +55,74 @@
   }
 }
 
+/*
+ * DESIGN.md v3 §15, "print is a surface": black on white, no `--paper`
+ * fill, payer lanes print as their line patterns instead of colour. This
+ * redefines the same colour tokens app/globals.css's `:root` block
+ * defines — every SVG diagram (StationFragment, NetworkMap,
+ * InaCbgDiagram) already reads colour exclusively through
+ * `var(--color-x)`, so this one override turns every diagram in the app
+ * black-on-white on paper without touching component code, the same
+ * mechanism the dark-mode convention in other codebases uses. Tailwind's
+ * `bg-payer-*`/`bg-self`/`bg-care` *utility* classes bake a literal hex at
+ * build time rather than reading the custom property, which is why
+ * payerStyle.ts also carries an explicit `print:bg-black` on every payer
+ * swatch — the pattern background-image (a fixed rgba overlay, not
+ * colour-token-driven) still shows through, so the lane stays legible by
+ * pattern, not colour, on paper.
+ */
 @media print {
   .no-print {
     display: none !important;
+  }
+
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+
+  * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  :root {
+    --color-paper: #ffffff;
+    --color-ink: #000000;
+    --color-rule: #808080;
+    --color-payer-1: #000000;
+    --color-payer-2: #000000;
+    --color-payer-3: #000000;
+    --color-self: #000000;
+    --color-care: #000000;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .bg-paper {
+    background-color: #fff !important;
+  }
+
+  /* The emergency banner (bg-care text-paper) is a Tailwind utility, same literal-hex-at-build-time reason as the payer swatches above. */
+  .bg-care {
+    background-color: #000 !important;
+  }
+
+  /* Tailwind's border-rule utility bakes a literal hex too light to read once printed — force a visible hairline. */
+  .border-rule {
+    border-color: #808080 !important;
+  }
+
+  /* DESIGN.md §15: "every URL a link points to is printed after the link text." */
+  a[href]::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.85em;
+    color: #000;
   }
 }

@@ -24,7 +24,7 @@ export function ReferenceEntryList({ entries }: { entries: DisplayEntry[] }) {
         <li
           key={entry.term}
           id={slugify(entry.term)}
-          className="border-b border-rule pb-6 last:border-none last:pb-0 scroll-mt-4"
+          className="border-b border-rule pb-6 last:border-none last:pb-0 scroll-mt-4 print:break-inside-avoid"
         >
           <h3 className="text-key font-medium">{entry.term}</h3>
           <p className="text-body-lg mt-1">{entry.definition}</p>
