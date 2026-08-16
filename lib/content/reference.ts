@@ -64,6 +64,15 @@ export const ReferenceSchema = z.discriminatedUnion('format', [
       ...referenceBaseFields,
       format: z.literal('entryList'),
       entries: z.array(ReferenceEntrySchema).min(1),
+      /**
+       * DESIGN.md v3 §4: alat-kesehatan and kelas are tabular data — a
+       * staff member scanning for a replacement interval needs a cell, not
+       * a paragraph. pengecualian, poli, and obat stay stacked cards
+       * (pengecualian's plain-language examples matter more than any
+       * column). Required, not defaulted, so every entryList reference
+       * states its own classification explicitly.
+       */
+      tabular: z.boolean(),
     })
     .strict(),
 ]);

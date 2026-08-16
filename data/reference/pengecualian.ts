@@ -32,6 +32,7 @@ export const pengecualian: Reference = {
     'Pelayanan yang benar-benar tidak ditanggung JKN, berdasarkan Perpres 82/2018 Pasal 52 — daftar ini sedang diverifikasi ulang dan belum dipastikan lengkap.',
   // The whole off-network cluster, not one item — no single station/off-network id fits.
   position: null,
+  tabular: false,
   entries: [
     {
       term: 'Pelayanan estetik',

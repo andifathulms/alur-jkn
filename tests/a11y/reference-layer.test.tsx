@@ -56,11 +56,12 @@ describe('reference layer components', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it('every entryList section renders through ReferenceEntryList without axe violations', async () => {
+  it('every non-tabular entryList section renders through ReferenceEntryList without axe violations', async () => {
     const now = new Date();
-    for (const slug of ['pengecualian', 'poli', 'alat-kesehatan', 'obat', 'kelas']) {
+    for (const slug of ['pengecualian', 'poli', 'obat']) {
       const reference = getReference(slug);
       if (reference?.format !== 'entryList') throw new Error(`${slug}: expected entryList format`);
+      expect(reference.tabular).toBe(false);
       const displayEntries = reference.entries.map((item) => ({
         entry: item,
         stale: isStale(item.citation.verifiedAt, now),

@@ -20,6 +20,7 @@ export const obat: Reference = {
   title: 'Obat — Formularium Nasional',
   summary: 'Obat yang dijamin JKN mengacu pada Formularium Nasional (Fornas); obat di luar daftar itu mengikuti jalur persetujuan tersendiri.',
   position: { type: 'station', stationId: 'obatNonFornas' },
+  tabular: false,
   entries: [
     {
       term: 'Formularium Nasional (Fornas)',

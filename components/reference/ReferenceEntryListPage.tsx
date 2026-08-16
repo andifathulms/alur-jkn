@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { ReferenceEntryList } from '@/components/reference/ReferenceEntryList';
+import { ReferenceEntryTable } from '@/components/reference/ReferenceEntryTable';
 import { ShareCard } from '@/components/share/ShareCard';
 import { StationFragment } from '@/components/pathway/StationFragment';
 import { getReference } from '@/data/reference';
@@ -32,7 +33,11 @@ export function ReferenceEntryListPage({ slug }: { slug: string }) {
         <p className="text-body-lg mt-3">{entry.summary}</p>
       </div>
       <ShareCard shareText={referenceShareText(entry)} />
-      <ReferenceEntryList entries={displayEntries} />
+      {entry.tabular ? (
+        <ReferenceEntryTable entries={displayEntries} caption={entry.summary} />
+      ) : (
+        <ReferenceEntryList entries={displayEntries} />
+      )}
     </div>
   );
 }

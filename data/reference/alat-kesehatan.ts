@@ -21,6 +21,7 @@ export const alatKesehatan: Reference = {
   title: 'Alat kesehatan',
   summary: 'Kacamata, alat bantu dengar, gigi tiruan, dan alat kesehatan lain yang dijamin JKN memiliki batas tarif dan jadwal penggantian tersendiri.',
   position: { type: 'station', stationId: 'alkesAboveCeiling' },
+  tabular: true,
   entries: [
     {
       term: 'Kacamata',
